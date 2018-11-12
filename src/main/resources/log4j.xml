@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<!-- 设置缓冲为8k -->
+		<!-- <param name="BufferedIO" value="true" /> -->
+		<!-- <param name="BufferSize" value="8192" /> -->
+		<!-- <param name="ImmediateFlush" value="false" /> -->
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %50.50c - %m \n" />
+		</layout>
+	</appender>
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- 设置缓冲为8k -->
+		<!-- <param name="BufferedIO" value="true" /> -->
+		<!-- <param name="BufferSize" value="8192" /> -->
+		<!-- <param name="ImmediateFlush" value="false" /> -->
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="file" value="/export/Logs/zlihj/log.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+			<!--<param name="LevelMax" value="FATAL "/> -->
+		</filter>
+	</appender>
+	<appender name="FILE-ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="file" value="/export/Logs/zlihj/log-error.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="ERROR" />
+		</filter>
+	</appender>
+
+
+	<category name="org.apache.ibatis">
+		<priority value="DEBUG" />
+	</category>
+	<category name="org.mybatis">
+		<priority value="DEBUG" />
+	</category>
+	<category name="java.sql.ResultSet">
+		<priority value="INFO" />
+	</category>
+	<category name="java.sql" additivity="false">
+		<priority value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+	<category name="cn.zlihj">
+		<priority value="DEBUG" />
+	</category>
+	<root>
+		<priority value="INFO" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="FILE-ERROR" />
+	</root>
+</log4j:configuration>

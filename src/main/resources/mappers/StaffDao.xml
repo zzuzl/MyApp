@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zlihj.dao.StaffDao">
+
+    <insert id="insert" parameterType="cn.zlihj.domain.Staff" keyProperty="id" useGeneratedKeys="true">
+        insert into staff(
+            name,
+            createTime,
+            updateTime
+        ) values(
+            #{name},
+            now(),
+            now()
+        )
+    </insert>
+
+    <select id="findByEmail" resultType="cn.zlihj.domain.Staff">
+        select * from staff where email=#{email} limit 1
+    </select>
+
+    <select id="pageList" resultType="cn.zlihj.domain.Staff">
+        select * from staff
+        <if test="pid != null">
+            where pid=#{pid}
+        </if>
+        limit ${from},${size}
+    </select>
+
+    <update id="changePassword" >
+        update staff set password=#{newPassword} where email=#{email} and password=#{newPassword}
+    </update>
+
+    <update id="updateInfo" parameterType="cn.zlihj.domain.Staff">
+        update staff
+        set qq=#{qq},
+        gxtAccount=#{gxtAccount},
+        phone=#{phone}
+        where email=#{email}
+    </update>
+
+</mapper>
