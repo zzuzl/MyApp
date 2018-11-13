@@ -24,7 +24,8 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
         if (token == null) {
-            // todo
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "未登录");
+            return false;
         }
 
         String user = null;
@@ -32,12 +33,14 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
             user = ParamUtil.parseToken(token);
         } catch (Exception e) {
             logger.error("token error:{}", token);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             return false;
         }
         Staff staff = staffService.findByEmail(user);
 
         if (staff == null) {
-            throw new RuntimeException("未登录");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "未登录");
+            return false;
         }
         LoginContext.setUser(staff);
         return true;

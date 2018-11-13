@@ -26,14 +26,14 @@ public class StaffController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public Result login(@RequestParam(value = "user") String user,
-                        @RequestParam(value = "password") String password,
-                        HttpServletResponse response) {
+                        @RequestParam(value = "password") String password) {
         Result result = Result.successResult();
         try {
             Staff staff = staffService.login(user, password);
             LoginContext.setUser(staff);
             String token = ParamUtil.createToken(user);
             result.setMsg(token);
+            result.setData(staff);
         } catch (Exception e) {
             logger.error("登录失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
@@ -70,10 +70,10 @@ public class StaffController {
 
     @RequestMapping(value = "/findByPid", method = RequestMethod.GET)
     @ResponseBody
-    public ListResult<Staff> findByPid(Integer pid) {
+    public ListResult<Staff> findByPid(Integer pid, Integer page) {
         ListResult<Staff> result = null;
         try {
-            staffService.pageList(1, 10, pid);
+            staffService.pageList(page, 20, pid);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());

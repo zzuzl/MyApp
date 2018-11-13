@@ -3,6 +3,7 @@ package cn.zlihj.dto;
 public class Result {
     private boolean success = false;
     private String msg;
+    private Object data;
 
     public Result() {
     }
@@ -25,6 +26,14 @@ public class Result {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 
     public static Result successResult() {
