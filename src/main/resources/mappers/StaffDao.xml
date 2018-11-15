@@ -22,8 +22,9 @@
 
     <select id="pageList" resultType="cn.zlihj.domain.Staff">
         select * from staff
+        where source=#{source}
         <if test="pid != null">
-            where pid=#{pid}
+            and pid=#{pid}
         </if>
         limit ${from},${size}
     </select>

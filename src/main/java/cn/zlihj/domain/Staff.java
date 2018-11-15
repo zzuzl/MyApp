@@ -1,6 +1,7 @@
 package cn.zlihj.domain;
 
 import cn.zlihj.enums.Gender;
+import cn.zlihj.enums.Source;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ public class Staff {
     private String name;
     private Integer pid;
     private WorkType type;
+    private Source source;
     private Gender gender;
     private Date birthday;
     private String school;
@@ -45,6 +47,14 @@ public class Staff {
 
     public void setType(WorkType type) {
         this.type = type;
+    }
+
+    public Source getSource() {
+        return source;
+    }
+
+    public void setSource(Source source) {
+        this.source = source;
     }
 
     public Gender getGender() {

@@ -3,6 +3,7 @@ package cn.zlihj.web;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
+import cn.zlihj.enums.Source;
 import cn.zlihj.service.StaffService;
 import cn.zlihj.util.LoginContext;
 import cn.zlihj.util.ParamUtil;
@@ -70,10 +71,12 @@ public class StaffController {
 
     @RequestMapping(value = "/findByPid", method = RequestMethod.GET)
     @ResponseBody
-    public ListResult<Staff> findByPid(Integer pid, Integer page) {
+    public ListResult<Staff> findByPid(@RequestParam("source") Integer source,
+                                       Integer pid,
+                                       @RequestParam("page") Integer page) {
         ListResult<Staff> result = null;
         try {
-            staffService.pageList(page, 20, pid);
+            staffService.pageList(page, 20, Source.of(source), pid);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());

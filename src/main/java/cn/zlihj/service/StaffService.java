@@ -3,6 +3,7 @@ package cn.zlihj.service;
 import cn.zlihj.dao.StaffDao;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
+import cn.zlihj.enums.Source;
 import cn.zlihj.util.ParamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,8 @@ public class StaffService {
         return staffDao.findByEmail(email);
     }
 
-    public ListResult<Staff> pageList(int page, int size, Integer pid) {
-        List<Staff> list = staffDao.pageList((page - 1) * size, size, pid);
+    public ListResult<Staff> pageList(int page, int size, Source source, Integer pid) {
+        List<Staff> list = staffDao.pageList((page - 1) * size, size, source.value().intValue(), pid);
         return ListResult.successList(list);
     }
 }
