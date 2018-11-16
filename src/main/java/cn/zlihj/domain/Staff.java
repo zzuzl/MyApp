@@ -15,7 +15,7 @@ public class Staff {
     private WorkType type;
     private Source source;
     private Gender gender;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", locale = "zh", timezone = "GMT+8")
     private Date birthday;
     private String school;
     private String major;

@@ -4,6 +4,26 @@
 
 <mapper namespace="cn.zlihj.dao.StaffDao">
 
+    <sql id="column">
+        id,
+        `name`,
+        pid,
+        `type` as `type.id`,
+        source,
+        gender,
+        birthday,
+        school,
+        major,
+        phone,
+        phone,
+        qq,
+        gxtAccount,
+        email,
+        wx,
+        workAddress,
+        password
+    </sql>
+
     <insert id="insert" parameterType="cn.zlihj.domain.Staff" keyProperty="id" useGeneratedKeys="true">
         insert into staff(
             name,
@@ -17,11 +37,13 @@
     </insert>
 
     <select id="findByEmail" resultType="cn.zlihj.domain.Staff">
-        select * from staff where email=#{email} limit 1
+        select <include refid="column"/>
+        from staff where email=#{email} limit 1
     </select>
 
     <select id="pageList" resultType="cn.zlihj.domain.Staff">
-        select * from staff
+        select <include refid="column"/>
+        from staff
         where source=#{source}
         <if test="pid != null">
             and pid=#{pid}

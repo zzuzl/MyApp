@@ -1,7 +1,9 @@
 package test;
 
-import cn.zlihj.dao.CompanyDao;
 import cn.zlihj.domain.Company;
+import cn.zlihj.domain.Staff;
+import cn.zlihj.dto.ListResult;
+import cn.zlihj.enums.Source;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.StaffService;
 import org.junit.Test;
@@ -16,8 +18,6 @@ public class SpringTest {
     @Autowired
     private CompanyService companyService;
     @Autowired
-    private CompanyDao companyDao;
-    @Autowired
     private StaffService staffService;
 
     @Test
@@ -29,7 +29,10 @@ public class SpringTest {
 
     @Test
     public void testFind() {
-        // System.out.println(companyDao.findByName("test1").getCreateTime());
-    }
+        Staff staff = staffService.findByEmail("672399171@qq.com");
+        System.out.println(staff);
 
+        ListResult<Staff> listResult = staffService.pageList(1, 20, Source.PROJECT, 1);
+        System.out.println(listResult);
+    }
 }
