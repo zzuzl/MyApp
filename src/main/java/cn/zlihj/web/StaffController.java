@@ -76,7 +76,7 @@ public class StaffController {
                                        @RequestParam("page") Integer page) {
         ListResult<Staff> result = null;
         try {
-            staffService.pageList(page, 20, Source.of(source), pid);
+            result = staffService.pageList(page, 20, Source.of(source), pid);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());

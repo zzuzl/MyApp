@@ -3,6 +3,7 @@ package test;
 import cn.zlihj.dao.CompanyDao;
 import cn.zlihj.domain.Company;
 import cn.zlihj.service.CompanyService;
+import cn.zlihj.service.StaffService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class SpringTest {
     private CompanyService companyService;
     @Autowired
     private CompanyDao companyDao;
+    @Autowired
+    private StaffService staffService;
 
     @Test
     public void testInsert() {
