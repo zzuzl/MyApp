@@ -27,14 +27,15 @@ public class StaffController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public Result login(@RequestParam(value = "user") String user,
-                        @RequestParam(value = "password") String password) {
+                        @RequestParam(value = "password") String password,
+                        HttpServletResponse response) {
         Result result = Result.successResult();
         try {
             Staff staff = staffService.login(user, password);
             LoginContext.setUser(staff);
-            String token = ParamUtil.createToken(user);
-            result.setMsg(token);
+            staff.setPassword(null);
             result.setData(staff);
+            response.addHeader("token", ParamUtil.createToken(user));
         } catch (Exception e) {
             logger.error("登录失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());

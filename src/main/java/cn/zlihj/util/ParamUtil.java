@@ -22,7 +22,7 @@ public final class ParamUtil {
             Algorithm algorithm = Algorithm.HMAC256(APP);
             return JWT.create()
                     .withIssuer(user)
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 360000))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 604800000))
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new RuntimeException("token创建失败:" + user);

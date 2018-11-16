@@ -1,6 +1,8 @@
 package cn.zlihj.enums;
 
 import cn.zlihj.mybatis.Convertable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @Convertable
 public enum Source {
@@ -15,10 +17,12 @@ public enum Source {
         this.text = text;
     }
 
+    @JsonValue
     public Integer value() {
         return value;
     }
 
+    @JsonCreator
     public static Source of(Integer value) {
         for (Source source : values()) {
             if (source.value.equals(value)) {

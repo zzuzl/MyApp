@@ -2,9 +2,12 @@ package cn.zlihj.domain;
 
 import cn.zlihj.enums.Gender;
 import cn.zlihj.enums.Source;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Staff {
     private Long id;
     private String name;
@@ -12,6 +15,7 @@ public class Staff {
     private WorkType type;
     private Source source;
     private Gender gender;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date birthday;
     private String school;
     private String major;
@@ -22,7 +26,9 @@ public class Staff {
     private String wx;
     private String workAddress;
     private String password;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date updateTime;
 
     public Long getId() {

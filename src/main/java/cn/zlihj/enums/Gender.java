@@ -1,6 +1,8 @@
 package cn.zlihj.enums;
 
 import cn.zlihj.mybatis.Convertable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @Convertable
 public enum Gender {
@@ -15,10 +17,12 @@ public enum Gender {
         this.text = text;
     }
 
+    @JsonValue
     public Integer value() {
         return value;
     }
 
+    @JsonCreator
     public static Gender of(Integer value) {
         for (Gender gender : values()) {
             if (gender.value.equals(value)) {

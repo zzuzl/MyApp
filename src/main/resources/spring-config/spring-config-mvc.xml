@@ -76,15 +76,9 @@
 			</list>
 		</property>-->
 	</bean>
-	<!-- spring mvc related -->
-	<!-- 配置校验器 -->
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-	    <!-- 校验器，使用hibernate校验器 -->
-	    <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
-	</bean>
-	
+
 	<!-- JSR-303 support will be detected on classpath and enabled automatically -->
-	<mvc:annotation-driven conversion-service="conversionService" validator="validator"/>
+	<mvc:annotation-driven conversion-service="conversionService" />
 
 	<mvc:default-servlet-handler />
 
