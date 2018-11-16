@@ -1,16 +1,17 @@
 package cn.zlihj.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListResult<T> extends Result {
     private int page;
     private long total;
     private int size;
-    private List<T> data;
+    private List<T> data = new ArrayList<>();
 
     public ListResult(boolean success, List<T> data) {
         super(success);
-        this.data = data;
+        setData(data);
     }
 
     public List<T> getData() {
@@ -18,6 +19,9 @@ public class ListResult<T> extends Result {
     }
 
     public void setData(List<T> data) {
+        if (data == null) {
+            data = new ArrayList<>();
+        }
         this.data = data;
     }
 
