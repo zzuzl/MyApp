@@ -1,5 +1,7 @@
 package cn.zlihj.web;
 
+import cn.zlihj.dto.Result;
+import cn.zlihj.util.LoginContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,10 @@ public class IndexController {
     }
 
     @RequestMapping("/checkLogin")
-    public void checkLogin() {
-
+    @ResponseBody
+    public Result checkLogin() {
+        Result result = Result.successResult();
+        result.setData(LoginContext.currentUser());
+        return result;
     }
 }
