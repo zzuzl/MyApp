@@ -34,7 +34,7 @@ public class StaffController {
             Staff staff = staffService.login(user, password);
             LoginContext.setUser(staff);
             staff.setPassword(null);
-            result.setData(staff);
+            result.setData(staffService.fillStaffInfo(staff));
             response.addHeader("token", ParamUtil.createToken(user));
         } catch (Exception e) {
             logger.error("登录失败：{}", e.getMessage(), e);

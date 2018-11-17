@@ -1,7 +1,11 @@
 package cn.zlihj.service;
 
+import cn.zlihj.dao.CompanyDao;
+import cn.zlihj.dao.ProjectDao;
 import cn.zlihj.dao.StaffDao;
 import cn.zlihj.dao.WorkTypeDao;
+import cn.zlihj.domain.Company;
+import cn.zlihj.domain.Project;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.domain.WorkType;
 import cn.zlihj.dto.ListResult;
@@ -25,6 +29,10 @@ public class StaffService {
     private StaffDao staffDao;
     @Autowired
     private WorkTypeDao workTypeDao;
+    @Autowired
+    private CompanyDao companyDao;
+    @Autowired
+    private ProjectDao projectDao;
 
     public Staff login(String email, String password) {
         Staff staff = staffDao.findByEmail(email);
@@ -60,6 +68,35 @@ public class StaffService {
         }
 
         return ListResult.successList(list);
+    }
+
+    public Staff fillStaffInfo(Staff staff) {
+        List<WorkType> workTypes = workTypeDao.list();
+        for (WorkType workType : workTypes) {
+            if (workType.getId().equals(staff.getType().getId())) {
+                staff.setType(workType);
+                break;
+            }
+        }
+
+        switch (staff.getSource()) {
+            case COMPANY:
+                Company company = companyDao.findById(staff.getPid());
+                if (company != null) {
+                    staff.setPname(company.getName());
+                }
+                break;
+            case PROJECT:
+                Project project = projectDao.findById(staff.getPid());
+                if (project != null) {
+                    staff.setPname(project.getName());
+                }
+                break;
+            default:
+                break;
+        }
+
+        return staff;
     }
 
     private Map<Integer, WorkType> toMap(final List<WorkType> workTypes) {
