@@ -16,6 +16,10 @@ public class ProjectService {
         projectDao.insert(project);
     }
 
+    public Project findById(Integer id) {
+        return projectDao.findById(id);
+    }
+
     public List<Project> list(Integer pid) {
         return projectDao.list(pid);
     }

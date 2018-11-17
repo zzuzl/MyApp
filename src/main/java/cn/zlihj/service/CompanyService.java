@@ -12,6 +12,10 @@ public class CompanyService {
     @Autowired
     private CompanyDao companyDao;
 
+    public Company findById(Integer id) {
+        return companyDao.findById(id);
+    }
+
     public void insert(Company company) {
         companyDao.insert(company);
     }

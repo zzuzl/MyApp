@@ -12,6 +12,7 @@ public class Staff {
     private Long id;
     private String name;
     private Integer pid;
+    private String pname;
     private WorkType type;
     private Source source;
     private Gender gender;
@@ -45,6 +46,14 @@ public class Staff {
 
     public void setPid(Integer pid) {
         this.pid = pid;
+    }
+
+    public String getPname() {
+        return pname;
+    }
+
+    public void setPname(String pname) {
+        this.pname = pname;
     }
 
     public WorkType getType() {

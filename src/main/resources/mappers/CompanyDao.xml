@@ -16,6 +16,10 @@
         )
     </insert>
 
+    <select id="findById" resultType="cn.zlihj.domain.Company">
+        select * from company where id=#{id}
+    </select>
+
     <select id="findByName" resultType="cn.zlihj.domain.Company">
         select * from company where name=#{name} limit 1
     </select>
