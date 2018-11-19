@@ -4,10 +4,7 @@ import cn.zlihj.dao.CompanyDao;
 import cn.zlihj.dao.ProjectDao;
 import cn.zlihj.dao.StaffDao;
 import cn.zlihj.dao.WorkTypeDao;
-import cn.zlihj.domain.Company;
-import cn.zlihj.domain.Project;
-import cn.zlihj.domain.Staff;
-import cn.zlihj.domain.WorkType;
+import cn.zlihj.domain.*;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.enums.Source;
 import cn.zlihj.util.ParamUtil;
@@ -97,6 +94,10 @@ public class StaffService {
         }
 
         return staff;
+    }
+
+    public List<SearchVo> searchAll() {
+        return staffDao.searchAll();
     }
 
     private Map<Integer, WorkType> toMap(final List<WorkType> workTypes) {

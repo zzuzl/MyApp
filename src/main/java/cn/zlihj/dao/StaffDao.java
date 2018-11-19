@@ -1,5 +1,6 @@
 package cn.zlihj.dao;
 
+import cn.zlihj.domain.SearchVo;
 import cn.zlihj.domain.Staff;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,6 @@ public interface StaffDao {
                        @Param("newPassword") String newPassword);
 
     int updateInfo(Staff staff);
+
+    List<SearchVo> searchAll();
 }

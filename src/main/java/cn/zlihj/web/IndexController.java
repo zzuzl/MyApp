@@ -1,6 +1,8 @@
 package cn.zlihj.web;
 
+import cn.zlihj.domain.SearchVo;
 import cn.zlihj.domain.Staff;
+import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.ProjectService;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -38,6 +42,22 @@ public class IndexController {
         Result result = Result.successResult();
         Staff staff = LoginContext.currentUser();
         result.setData(staffService.fillStaffInfo(staff));
+        return result;
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @ResponseBody
+    public ListResult<SearchVo> search(@RequestParam("source") Integer source,
+                                       Integer pid,
+                                       @RequestParam("page") Integer page) {
+        ListResult<SearchVo> result = null;
+        try {
+            List<SearchVo> list = staffService.searchAll();
+            result = ListResult.successList(list);
+        } catch (Exception e) {
+            logger.error("查询失败：{}", e.getMessage(), e);
+            result = ListResult.errorList(e.getMessage());
+        }
         return result;
     }
 }

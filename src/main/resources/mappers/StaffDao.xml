@@ -63,4 +63,12 @@
         where email=#{email}
     </update>
 
+    <select id="searchAll" resultType="cn.zlihj.domain.SearchVo">
+        (select c.id, 2, c.`name` as title from company c where c.`name` like '%${key}%' limit 100)
+        union
+        (select s.id, 1, s.`name` as title from staff s where s.`name` like '${key}%' limit 100)
+        union
+        (select p.id, 3, p.`name` as title from project p where p.`name` like '%${key}%' limit 100)
+    </select>
+
 </mapper>
