@@ -29,10 +29,13 @@ public class SpringTest {
 
     @Test
     public void testFind() {
-        Staff staff = staffService.findByEmail("672399171@qq.com");
+        /*Staff staff = staffService.findByEmail("672399171@qq.com");
         System.out.println(staff);
 
         ListResult<Staff> listResult = staffService.pageList(1, 20, Source.PROJECT, 1);
-        System.out.println(listResult);
+        System.out.println(listResult);*/
+
+        System.out.println(staffService.findById(1L));
+        System.out.println(companyService.findById(1));
     }
 }

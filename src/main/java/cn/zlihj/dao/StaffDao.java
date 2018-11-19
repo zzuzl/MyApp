@@ -11,6 +11,8 @@ public interface StaffDao {
 
     Staff findByEmail(@Param("email") String email);
 
+    Staff findById(@Param("id") Long id);
+
     List<Staff> pageList(@Param("from") int from,
                          @Param("size") int size,
                          @Param("source") int source,

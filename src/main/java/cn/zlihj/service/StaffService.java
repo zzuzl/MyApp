@@ -45,6 +45,10 @@ public class StaffService {
         Assert.isTrue(count == 1, "修改失败");
     }
 
+    public Staff findById(Long id) {
+        return staffDao.findById(id);
+    }
+
     public void updateInfo(Staff staff) {
         int count = staffDao.updateInfo(staff);
         Assert.isTrue(count == 1, "修改失败");
@@ -56,19 +60,20 @@ public class StaffService {
 
     public ListResult<Staff> pageList(int page, int size, Source source, Integer pid) {
         List<WorkType> workTypes = workTypeDao.list();
-        Map<Integer, WorkType> map = toMap(workTypes);
-
         List<Staff> list = staffDao.pageList((page - 1) * size, size, source.value().intValue(), pid);
 
         for (Staff staff : list) {
-            staff.setType(map.get(staff.getType().getId()));
+            fillStaffInfo(staff, workTypes);
         }
 
         return ListResult.successList(list);
     }
 
     public Staff fillStaffInfo(Staff staff) {
-        List<WorkType> workTypes = workTypeDao.list();
+        return fillStaffInfo(staff, workTypeDao.list());
+    }
+
+    public Staff fillStaffInfo(Staff staff, List<WorkType> workTypes) {
         for (WorkType workType : workTypes) {
             if (workType.getId().equals(staff.getType().getId())) {
                 staff.setType(workType);

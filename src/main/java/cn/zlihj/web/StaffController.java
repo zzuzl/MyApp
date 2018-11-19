@@ -84,4 +84,19 @@ public class StaffController {
         }
         return result;
     }
+
+    @RequestMapping(value = "/findById", method = RequestMethod.GET)
+    @ResponseBody
+    public Result findById(@RequestParam("id") Long id) {
+        Result result = null;
+        try {
+            Staff staff = staffService.findById(id);
+            result = Result.successResult();
+            result.setData(staff);
+        } catch (Exception e) {
+            logger.error("查询失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
 }

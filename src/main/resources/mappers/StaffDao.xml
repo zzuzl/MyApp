@@ -41,6 +41,11 @@
         from staff where email=#{email} limit 1
     </select>
 
+    <select id="findById" resultType="cn.zlihj.domain.Staff">
+        select <include refid="column"/>
+        from staff where id=#{id} limit 1
+    </select>
+
     <select id="pageList" resultType="cn.zlihj.domain.Staff">
         select <include refid="column"/>
         from staff

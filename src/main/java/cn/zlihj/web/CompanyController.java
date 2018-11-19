@@ -1,7 +1,9 @@
 package cn.zlihj.web;
 
 import cn.zlihj.domain.Company;
+import cn.zlihj.domain.Project;
 import cn.zlihj.dto.ListResult;
+import cn.zlihj.dto.Result;
 import cn.zlihj.service.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,21 @@ public class CompanyController {
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/findById", method = RequestMethod.GET)
+    @ResponseBody
+    public Result findById(@RequestParam("id") Integer id) {
+        Result result = null;
+        try {
+            Company company = companyService.findById(id);
+            result = Result.successResult();
+            result.setData(company);
+        } catch (Exception e) {
+            logger.error("查询失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
         }
         return result;
     }
