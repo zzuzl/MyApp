@@ -47,12 +47,10 @@ public class IndexController {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
-    public ListResult<SearchVo> search(@RequestParam("source") Integer source,
-                                       Integer pid,
-                                       @RequestParam("page") Integer page) {
+    public ListResult<SearchVo> search(@RequestParam("key") String key) {
         ListResult<SearchVo> result = null;
         try {
-            List<SearchVo> list = staffService.searchAll();
+            List<SearchVo> list = staffService.searchAll(key);
             result = ListResult.successList(list);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);

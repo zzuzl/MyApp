@@ -96,8 +96,8 @@ public class StaffService {
         return staff;
     }
 
-    public List<SearchVo> searchAll() {
-        return staffDao.searchAll();
+    public List<SearchVo> searchAll(String key) {
+        return staffDao.searchAll(key);
     }
 
     private Map<Integer, WorkType> toMap(final List<WorkType> workTypes) {

@@ -22,5 +22,5 @@ public interface StaffDao {
 
     int updateInfo(Staff staff);
 
-    List<SearchVo> searchAll();
+    List<SearchVo> searchAll(@Param("key") String key);
 }
