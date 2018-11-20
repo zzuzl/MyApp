@@ -91,6 +91,7 @@ public class StaffController {
         Result result = null;
         try {
             Staff staff = staffService.findById(id);
+            staffService.fillStaffInfo(staff);
             result = Result.successResult();
             result.setData(staff);
         } catch (Exception e) {

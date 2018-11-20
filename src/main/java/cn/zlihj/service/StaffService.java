@@ -17,10 +17,14 @@ import org.springframework.util.Assert;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 public class StaffService {
     private Logger logger = LoggerFactory.getLogger(getClass());
+    private final ConcurrentMap<Integer, Company> companyConcurrentMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Project> projectConcurrentMap = new ConcurrentHashMap<>();
 
     @Autowired
     private StaffDao staffDao;
@@ -83,13 +87,21 @@ public class StaffService {
 
         switch (staff.getSource()) {
             case COMPANY:
-                Company company = companyDao.findById(staff.getPid());
+                Company company = companyConcurrentMap.get(staff.getPid());
+                if (company == null) {
+                    company = companyDao.findById(staff.getPid());
+                    companyConcurrentMap.put(staff.getPid(), company);
+                }
                 if (company != null) {
                     staff.setPname(company.getName());
                 }
                 break;
             case PROJECT:
-                Project project = projectDao.findById(staff.getPid());
+                Project project = projectConcurrentMap.get(staff.getPid());
+                if (project == null) {
+                    project = projectDao.findById(staff.getPid());
+                    projectConcurrentMap.put(staff.getPid(), project);
+                }
                 if (project != null) {
                     staff.setPname(project.getName());
                 }
