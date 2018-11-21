@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @Controller
@@ -57,5 +59,29 @@ public class IndexController {
             result = ListResult.errorList(e.getMessage());
         }
         return result;
+    }
+
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public String uploadFile( @RequestParam("file") MultipartFile file, Model model) {
+        Result result = null;
+        try {
+            if (!file.isEmpty()) {
+                String rootPath = "/tmp";
+                File dir = new File(rootPath + File.separator + "tmpFiles");
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
+                file.transferTo(serverFile);
+                logger.info("You successfully uploaded file=" +  file.getOriginalFilename());
+            } else {
+                logger.error("You failed to upload " +  file.getOriginalFilename() + " because the file was empty.");
+            }
+        } catch (Exception e) {
+            logger.error("上传失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+
+        return "index";
     }
 }

@@ -83,11 +83,13 @@
 	<mvc:default-servlet-handler />
 
 	<bean id="userInterceptor" class="cn.zlihj.web.UserInterceptor" />
-		
+
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/staff/login"/>
+			<mvc:exclude-mapping path="/index"/>
+            <mvc:exclude-mapping path="/uploadFile"/>
 			<ref bean="userInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
