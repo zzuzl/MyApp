@@ -15,7 +15,6 @@
         school,
         major,
         phone,
-        phone,
         qq,
         gxtAccount,
         email,
@@ -26,11 +25,38 @@
 
     <insert id="insert" parameterType="cn.zlihj.domain.Staff" keyProperty="id" useGeneratedKeys="true">
         insert into staff(
-            name,
+            `name`,
+            pid,
+            `type`,
+            source,
+            gender,
+            birthday,
+            school,
+            major,
+            phone,
+            qq,
+            gxtAccount,
+            email,
+            wx,
+            workAddress,
+            password,
             createTime,
             updateTime
         ) values(
             #{name},
+            #{pid},
+            #{type},
+            #{source},
+            #{gender},
+            #{birthday},
+            #{school},
+            #{major},
+            #{phone},
+            #{qq},
+            #{gxtAccount},
+            #{email},
+            #{wx},
+            #{workAddress},
             now(),
             now()
         )
