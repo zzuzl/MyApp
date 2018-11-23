@@ -27,9 +27,13 @@ public enum WorkType {
         this.text = text;
     }
 
-    @JsonValue
     public Integer value() {
         return value;
+    }
+
+    @JsonValue
+    public String getText() {
+        return text;
     }
 
     @JsonCreator
