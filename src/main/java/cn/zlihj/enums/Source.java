@@ -31,4 +31,13 @@ public enum Source {
         }
         return null;
     }
+
+    public static Source ofText(String text) {
+        for (Source source : values()) {
+            if (source.text.equals(text)) {
+                return source;
+            }
+        }
+        return null;
+    }
 }

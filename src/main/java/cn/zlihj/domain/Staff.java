@@ -2,6 +2,7 @@ package cn.zlihj.domain;
 
 import cn.zlihj.enums.Gender;
 import cn.zlihj.enums.Source;
+import cn.zlihj.enums.WorkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

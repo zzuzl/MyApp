@@ -20,6 +20,10 @@ public class ProjectService {
         return projectDao.findById(id);
     }
 
+    public Project findByName(String name) {
+        return projectDao.findByName(name);
+    }
+
     public List<Project> list(Integer pid) {
         return projectDao.list(pid);
     }

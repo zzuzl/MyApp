@@ -8,7 +8,7 @@
         id,
         `name`,
         pid,
-        `type` as `type.id`,
+        `type`,
         source,
         gender,
         birthday,

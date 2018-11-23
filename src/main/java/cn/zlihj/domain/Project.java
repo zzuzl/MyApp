@@ -9,10 +9,19 @@ import java.util.Date;
 public class Project {
     private Integer id;
     private String name;
+    private Integer pid;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date updateTime;
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
+    }
 
     public Integer getId() {
         return id;

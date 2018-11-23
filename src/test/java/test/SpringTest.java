@@ -35,7 +35,8 @@ public class SpringTest {
         ListResult<Staff> listResult = staffService.pageList(1, 20, Source.PROJECT, 1);
         System.out.println(listResult);*/
 
-        System.out.println(staffService.fillStaffInfo(staffService.findById(1L)).getPname());
+        Staff staff = staffService.findById(1L);
+        System.out.println(staff);
         // System.out.println(companyService.findById(1));
     }
 }

@@ -31,4 +31,13 @@ public enum Gender {
         }
         return null;
     }
+
+    public static Gender ofText(String text) {
+        for (Gender gender : values()) {
+            if (gender.text.equals(text)) {
+                return gender;
+            }
+        }
+        return null;
+    }
 }

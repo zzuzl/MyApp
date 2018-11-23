@@ -16,6 +16,10 @@ public class CompanyService {
         return companyDao.findById(id);
     }
 
+    public Company findByName(String name) {
+        return companyDao.findByName(name);
+    }
+
     public void insert(Company company) {
         companyDao.insert(company);
     }

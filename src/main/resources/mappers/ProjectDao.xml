@@ -7,10 +7,12 @@
     <insert id="insert" parameterType="cn.zlihj.domain.Project" keyProperty="id" useGeneratedKeys="true">
         insert into project(
             name,
+            pid,
             createTime,
             updateTime
         ) values(
             #{name},
+            #{pid},
             now(),
             now()
         )

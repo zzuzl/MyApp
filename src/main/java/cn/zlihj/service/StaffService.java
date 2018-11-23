@@ -3,10 +3,10 @@ package cn.zlihj.service;
 import cn.zlihj.dao.CompanyDao;
 import cn.zlihj.dao.ProjectDao;
 import cn.zlihj.dao.StaffDao;
-import cn.zlihj.dao.WorkTypeDao;
 import cn.zlihj.domain.*;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.enums.Source;
+import cn.zlihj.enums.WorkType;
 import cn.zlihj.util.ParamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +28,6 @@ public class StaffService {
 
     @Autowired
     private StaffDao staffDao;
-    @Autowired
-    private WorkTypeDao workTypeDao;
     @Autowired
     private CompanyDao companyDao;
     @Autowired
@@ -63,28 +61,20 @@ public class StaffService {
     }
 
     public ListResult<Staff> pageList(int page, int size, Source source, Integer pid) {
-        List<WorkType> workTypes = workTypeDao.list();
         List<Staff> list = staffDao.pageList((page - 1) * size, size, source.value().intValue(), pid);
 
         for (Staff staff : list) {
-            fillStaffInfo(staff, workTypes);
+            fillStaffInfo(staff);
         }
 
         return ListResult.successList(list);
     }
 
-    public Staff fillStaffInfo(Staff staff) {
-        return fillStaffInfo(staff, workTypeDao.list());
+    public void addStaff(Staff staff) {
+        staffDao.insert(staff);
     }
 
-    public Staff fillStaffInfo(Staff staff, List<WorkType> workTypes) {
-        for (WorkType workType : workTypes) {
-            if (workType.getId().equals(staff.getType().getId())) {
-                staff.setType(workType);
-                break;
-            }
-        }
-
+    public Staff fillStaffInfo(Staff staff) {
         switch (staff.getSource()) {
             case COMPANY:
                 Company company = companyConcurrentMap.get(staff.getPid());
@@ -115,13 +105,5 @@ public class StaffService {
 
     public List<SearchVo> searchAll(String key) {
         return staffDao.searchAll(key);
-    }
-
-    private Map<Integer, WorkType> toMap(final List<WorkType> workTypes) {
-        Map<Integer, WorkType> map = new HashMap<>();
-        for (WorkType workType : workTypes) {
-            map.put(workType.getId(), workType);
-        }
-        return map;
     }
 }
