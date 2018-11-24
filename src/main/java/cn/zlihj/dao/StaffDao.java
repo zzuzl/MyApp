@@ -2,6 +2,7 @@ package cn.zlihj.dao;
 
 import cn.zlihj.domain.SearchVo;
 import cn.zlihj.domain.Staff;
+import cn.zlihj.domain.VersionInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface StaffDao {
     int updateInfo(Staff staff);
 
     List<SearchVo> searchAll(@Param("key") String key);
+
+    List<VersionInfo> listVersion();
 }

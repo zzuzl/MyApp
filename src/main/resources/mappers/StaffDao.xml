@@ -102,4 +102,11 @@
         (select p.id, 3 as type, p.`name` as title from project p where p.`name` like '%${key}%' limit 100)
     </select>
 
+    <select id="listVersion" resultType="cn.zlihj.domain.VersionInfo">
+        select * from version_config
+    </select>
+
+    <select id="findByVersion" resultType="cn.zlihj.domain.VersionInfo">
+        select * from version_config where version=#{version}
+    </select>
 </mapper>

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -25,6 +23,12 @@ public class StaffService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private final ConcurrentMap<Integer, Company> companyConcurrentMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, Project> projectConcurrentMap = new ConcurrentHashMap<>();
+    private final Comparator<VersionInfo> comparator = new Comparator<VersionInfo>() {
+        @Override
+        public int compare(VersionInfo o1, VersionInfo o2) {
+            return o1.getVersion().compareTo(o2.getVersion());
+        }
+    };
 
     @Autowired
     private StaffDao staffDao;
@@ -105,5 +109,11 @@ public class StaffService {
 
     public List<SearchVo> searchAll(String key) {
         return staffDao.searchAll(key);
+    }
+
+    public List<VersionInfo> listVersion() {
+        List<VersionInfo> versionInfos =  staffDao.listVersion();
+        versionInfos.sort(comparator);
+        return versionInfos;
     }
 }

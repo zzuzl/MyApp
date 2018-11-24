@@ -15,6 +15,7 @@ import cn.zlihj.service.StaffService;
 import cn.zlihj.util.ExcelUtil;
 import cn.zlihj.util.LoginContext;
 import cn.zlihj.util.ParamUtil;
+import com.fasterxml.jackson.core.util.VersionUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,14 @@ public class IndexController {
         Result result = Result.successResult();
         Staff staff = LoginContext.currentUser();
         result.setData(staffService.fillStaffInfo(staff));
+        return result;
+    }
+
+    @RequestMapping("/checkVersion")
+    @ResponseBody
+    public Result checkVersion(@RequestParam("version") String version) {
+        Result result = Result.successResult();
+        staffService.listVersion();
         return result;
     }
 
