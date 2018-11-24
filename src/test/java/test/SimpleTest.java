@@ -1,5 +1,9 @@
 package test;
 
+import cn.zlihj.domain.Staff;
+import cn.zlihj.enums.WorkType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -24,6 +28,13 @@ public class SimpleTest {
         if (!indexFile.exists()) {
             indexFile.mkdirs();
         }
+    }
+
+    @Test
+    public void testJson() throws JsonProcessingException {
+        Staff staff = new Staff();
+        staff.setType(WorkType.AZ);
+        System.out.println(new ObjectMapper().writeValueAsString(staff));
     }
 
     @Test
