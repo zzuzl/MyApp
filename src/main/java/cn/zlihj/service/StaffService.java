@@ -111,9 +111,7 @@ public class StaffService {
         return staffDao.searchAll(key);
     }
 
-    public List<VersionInfo> listVersion() {
-        List<VersionInfo> versionInfos =  staffDao.listVersion();
-        versionInfos.sort(comparator);
-        return versionInfos;
+    public VersionInfo findMaxVersion() {
+        return staffDao.findMaxVersion();
     }
 }

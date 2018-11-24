@@ -27,5 +27,5 @@ public interface StaffDao {
 
     List<SearchVo> searchAll(@Param("key") String key);
 
-    List<VersionInfo> listVersion();
+    VersionInfo findMaxVersion();
 }

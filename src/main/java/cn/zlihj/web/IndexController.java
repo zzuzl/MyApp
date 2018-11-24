@@ -1,9 +1,6 @@
 package cn.zlihj.web;
 
-import cn.zlihj.domain.Company;
-import cn.zlihj.domain.Project;
-import cn.zlihj.domain.SearchVo;
-import cn.zlihj.domain.Staff;
+import cn.zlihj.domain.*;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.enums.Gender;
@@ -61,9 +58,10 @@ public class IndexController {
 
     @RequestMapping("/checkVersion")
     @ResponseBody
-    public Result checkVersion(@RequestParam("version") String version) {
+    public Result checkVersion() {
         Result result = Result.successResult();
-        staffService.listVersion();
+        VersionInfo maxVersion = staffService.findMaxVersion();
+        result.setData(maxVersion);
         return result;
     }
 

@@ -2,6 +2,7 @@ package test;
 
 import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Staff;
+import cn.zlihj.domain.VersionInfo;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.enums.Source;
 import cn.zlihj.service.CompanyService;
@@ -37,6 +38,9 @@ public class SpringTest {
 
         Staff staff = staffService.findById(1L);
         System.out.println(staff);
+
+        VersionInfo maxVersion = staffService.findMaxVersion();
+        System.out.println(maxVersion.getUrl());
         // System.out.println(companyService.findById(1));
     }
 }
