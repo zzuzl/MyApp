@@ -1,11 +1,13 @@
 package test;
 
 import cn.zlihj.domain.Company;
+import cn.zlihj.domain.Project;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.domain.VersionInfo;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.enums.Source;
 import cn.zlihj.service.CompanyService;
+import cn.zlihj.service.ProjectService;
 import cn.zlihj.service.StaffService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SpringTest {
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private ProjectService projectService;
     @Autowired
     private StaffService staffService;
 
@@ -42,5 +46,21 @@ public class SpringTest {
         VersionInfo maxVersion = staffService.findMaxVersion();
         System.out.println(maxVersion.getUrl());
         // System.out.println(companyService.findById(1));
+    }
+
+    @Test
+    public void testSave() {
+        /*Company company = companyService.findById(1);
+        company.setName("技术质量部1");
+        companyService.save(company);*/
+
+        Project project = projectService.findById(1);
+        project.setName("技术质量部1");
+        projectService.save(project);
+    }
+
+    @Test
+    public void testMove() {
+        staffService.move(0, 1, 1, 1, 1L);
     }
 }

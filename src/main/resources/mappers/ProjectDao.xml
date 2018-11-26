@@ -18,6 +18,10 @@
         )
     </insert>
 
+    <update id="update" parameterType="cn.zlihj.domain.Project">
+        update project set name=#{name}, updateTime=now() where id=#{id}
+    </update>
+
     <select id="findById" resultType="cn.zlihj.domain.Project">
         select * from project where id=#{id}
     </select>

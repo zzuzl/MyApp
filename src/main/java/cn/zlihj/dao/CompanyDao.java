@@ -7,6 +7,8 @@ import java.util.List;
 public interface CompanyDao {
     void insert(Company company);
 
+    int update(Company company);
+
     Company findById(Integer id);
 
     Company findByName(String name);

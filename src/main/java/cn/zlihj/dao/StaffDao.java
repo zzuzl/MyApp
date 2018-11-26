@@ -25,6 +25,12 @@ public interface StaffDao {
 
     int updateInfo(Staff staff);
 
+    int moveStaff(@Param("source") int source,
+                  @Param("pid") Integer pid,
+                  @Param("oldSource") int oldSource,
+                  @Param("oldPid") Integer oldPid,
+                  @Param("id") Long id);
+
     List<SearchVo> searchAll(@Param("key") String key);
 
     VersionInfo findMaxVersion();

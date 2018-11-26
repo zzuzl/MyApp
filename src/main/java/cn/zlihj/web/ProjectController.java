@@ -1,5 +1,6 @@
 package cn.zlihj.web;
 
+import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Project;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
@@ -8,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,6 +47,20 @@ public class ProjectController {
             result.setData(project);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Result save(@RequestBody Project project) {
+        Result result = null;
+        try {
+            projectService.save(project);
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("保存失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
         }
         return result;

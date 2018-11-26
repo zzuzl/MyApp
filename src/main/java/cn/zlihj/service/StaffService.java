@@ -107,6 +107,11 @@ public class StaffService {
         return staff;
     }
 
+    public void move(int source, Integer pid, int oldSource, Integer oldPid, Long id) {
+        int i = staffDao.moveStaff(source, pid, oldSource, oldPid, id);
+        Assert.isTrue(i == 1, "移动失败");
+    }
+
     public List<SearchVo> searchAll(String key) {
         return staffDao.searchAll(key);
     }

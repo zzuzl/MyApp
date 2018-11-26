@@ -62,6 +62,10 @@
         )
     </insert>
 
+    <update id="moveStaff">
+        update staff set source=#{source}, pid=#{pid}, updateTime=now() where id=#{id} and source=#{oldSource} and pid=#{oldPid}
+    </update>
+
     <select id="findByEmail" resultType="cn.zlihj.domain.Staff">
         select <include refid="column"/>
         from staff where email=#{email} limit 1

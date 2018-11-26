@@ -4,6 +4,8 @@ import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.enums.Source;
+import cn.zlihj.service.CompanyService;
+import cn.zlihj.service.ProjectService;
 import cn.zlihj.service.StaffService;
 import cn.zlihj.util.LoginContext;
 import cn.zlihj.util.ParamUtil;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -23,6 +26,10 @@ public class StaffController {
 
     @Autowired
     private StaffService staffService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private ProjectService projectService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
@@ -65,6 +72,29 @@ public class StaffController {
             staffService.updateInfo(staff);
         } catch (Exception e) {
             logger.error("修改失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/move", method = RequestMethod.POST)
+    @ResponseBody
+    public Result move(@RequestParam int source, @RequestParam Integer pid,
+                       @RequestParam int oldSource, @RequestParam Integer oldPid, @RequestParam Long id) {
+        Result result = Result.successResult();
+        try {
+            Staff staff = staffService.findById(id);
+            Assert.notNull(staff, id + ":员工不存在");
+            Source of = Source.of(source);
+            Assert.notNull(of, id + ":来源错误");
+            if (of == Source.COMPANY) {
+                Assert.notNull(companyService.findById(pid), "company不存在");
+            } else {
+                Assert.notNull(projectService.findById(pid), "project不存在");
+            }
+            staffService.move(source, pid, oldSource, oldPid, id);
+        } catch (Exception e) {
+            logger.error("移动失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
         }
         return result;

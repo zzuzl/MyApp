@@ -7,6 +7,8 @@ import java.util.List;
 public interface ProjectDao {
     void insert(Project project);
 
+    int update(Project project);
+
     Project findById(Integer id);
 
     Project findByName(String name);

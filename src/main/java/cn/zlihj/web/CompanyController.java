@@ -50,4 +50,18 @@ public class CompanyController {
         }
         return result;
     }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Result save(@RequestBody Company company) {
+        Result result = null;
+        try {
+            companyService.save(company);
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("保存失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
 }
