@@ -65,7 +65,7 @@ public class StaffService {
     }
 
     public ListResult<Staff> pageList(int page, int size, Source source, Integer pid) {
-        List<Staff> list = staffDao.pageList((page - 1) * size, size, source.value().intValue(), pid);
+        List<Staff> list = staffDao.pageList((page - 1) * size, size, source == null ? null : source.value(), pid);
 
         for (Staff staff : list) {
             fillStaffInfo(staff);

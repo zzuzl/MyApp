@@ -63,4 +63,10 @@ public class SpringTest {
     public void testMove() {
         staffService.move(0, 1, 1, 1, 1L);
     }
+
+    @Test
+    public void testPage() {
+        ListResult<Staff> list = staffService.pageList(1, 20, null, null);
+        System.out.println(list.getSize());
+    }
 }

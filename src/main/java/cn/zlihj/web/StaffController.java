@@ -115,6 +115,19 @@ public class StaffController {
         return result;
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public ListResult<Staff> list(@RequestParam("page") Integer page) {
+        ListResult<Staff> result = null;
+        try {
+            result = staffService.pageList(page, 20, null, null);
+        } catch (Exception e) {
+            logger.error("查询失败：{}", e.getMessage(), e);
+            result = ListResult.errorList(e.getMessage());
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
     @ResponseBody
     public Result findById(@RequestParam("id") Long id) {
