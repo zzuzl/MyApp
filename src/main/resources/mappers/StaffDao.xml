@@ -81,7 +81,7 @@
         from staff
         where 1=1
         <if test="source != null">
-            source=#{source}
+            and source=#{source}
         </if>
         <if test="pid != null">
             and pid=#{pid}

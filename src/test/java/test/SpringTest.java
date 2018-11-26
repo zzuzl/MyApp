@@ -40,12 +40,15 @@ public class SpringTest {
         ListResult<Staff> listResult = staffService.pageList(1, 20, Source.PROJECT, 1);
         System.out.println(listResult);*/
 
-        Staff staff = staffService.findById(1L);
+        /*Staff staff = staffService.findById(1L);
         System.out.println(staff);
 
         VersionInfo maxVersion = staffService.findMaxVersion();
-        System.out.println(maxVersion.getUrl());
+        System.out.println(maxVersion.getUrl());*/
         // System.out.println(companyService.findById(1));
+
+        System.out.println(staffService.searchAll("zl"));
+        System.out.println(staffService.searchAll("锦艺"));
     }
 
     @Test
