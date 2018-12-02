@@ -70,7 +70,7 @@ public class SpringTest {
 
     @Test
     public void testPage() {
-        ListResult<Staff> list = staffService.pageList(1, 20, null, null);
+        ListResult<Staff> list = staffService.pageList(1, 20, null, null, null);
         System.out.println(list.getSize());
     }
 }
