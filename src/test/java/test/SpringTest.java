@@ -47,8 +47,9 @@ public class SpringTest {
         System.out.println(maxVersion.getUrl());*/
         // System.out.println(companyService.findById(1));
 
-        System.out.println(staffService.searchAll("zl"));
-        System.out.println(staffService.searchAll("锦艺"));
+        /*System.out.println(staffService.searchAll("zl"));
+        System.out.println(staffService.searchAll("锦艺"));*/
+        // System.out.println(staffService.pageList(1, 20, null, null).getTotal());
     }
 
     @Test

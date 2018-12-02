@@ -64,14 +64,20 @@ public class StaffService {
         return staffDao.findByEmail(email);
     }
 
-    public ListResult<Staff> pageList(int page, int size, Source source, Integer pid) {
-        List<Staff> list = staffDao.pageList((page - 1) * size, size, source == null ? null : source.value(), pid);
+    public ListResult<Staff> pageList(int page, int size, Source source, Integer pid, String key) {
+        List<Staff> list = staffDao.pageList((page - 1) * size,
+                size,
+                source == null ? null : source.value(),
+                pid,
+                key);
 
         for (Staff staff : list) {
             fillStaffInfo(staff);
         }
+        ListResult<Staff> listResult = ListResult.successList(list);
+        listResult.setTotal(staffDao.count(source == null ? null : source.value(), pid, key));
 
-        return ListResult.successList(list);
+        return listResult;
     }
 
     public void addStaff(Staff staff) {

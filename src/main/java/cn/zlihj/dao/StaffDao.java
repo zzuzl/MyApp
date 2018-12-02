@@ -17,7 +17,12 @@ public interface StaffDao {
     List<Staff> pageList(@Param("from") int from,
                          @Param("size") int size,
                          @Param("source") Integer source,
-                         @Param("pid") Integer pid);
+                         @Param("pid") Integer pid,
+                         @Param("key") String key);
+
+    int count(@Param("source") Integer source,
+              @Param("pid") Integer pid,
+              @Param("key") String key);
 
     int changePassword(@Param("email") String email,
                        @Param("oldPassword") String oldPassword,

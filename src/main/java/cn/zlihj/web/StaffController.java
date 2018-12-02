@@ -105,7 +105,7 @@ public class StaffController {
                                        @RequestParam("page") Integer page) {
         ListResult<Staff> result = null;
         try {
-            result = staffService.pageList(page, 20, Source.of(source), pid);
+            result = staffService.pageList(page, 20, Source.of(source), pid, null);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());
@@ -115,10 +115,10 @@ public class StaffController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public ListResult<Staff> list(@RequestParam("page") Integer page) {
+    public ListResult<Staff> list(@RequestParam("page") Integer page, String key) {
         ListResult<Staff> result = null;
         try {
-            result = staffService.pageList(page, 20, null, null);
+            result = staffService.pageList(page, 20, null, null, key);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());

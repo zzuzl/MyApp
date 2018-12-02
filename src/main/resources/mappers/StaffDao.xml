@@ -87,8 +87,26 @@
         <if test="pid != null">
             and pid=#{pid}
         </if>
+        <if test="key != null">
+            and name like '%${key}%'
+        </if>
         order by id
         limit ${from},${size}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) as num
+        from staff
+        where 1=1
+        <if test="source != null">
+            and source=#{source}
+        </if>
+        <if test="pid != null">
+            and pid=#{pid}
+        </if>
+        <if test="key != null">
+            and name like '%${key}%'
+        </if>
     </select>
 
     <update id="changePassword" >
