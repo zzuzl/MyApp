@@ -36,7 +36,6 @@ public enum WorkType {
         return text;
     }
 
-    @JsonCreator
     public static WorkType of(Integer value) {
         for (WorkType workType : values()) {
             if (workType.value.equals(value)) {
@@ -46,6 +45,7 @@ public enum WorkType {
         return null;
     }
 
+    @JsonCreator
     public static WorkType ofText(String text) {
         for (WorkType workType : values()) {
             if (workType.text.equals(text)) {

@@ -107,6 +107,16 @@ public class StaffService {
         return staff;
     }
 
+    public void save(Staff staff) {
+        Assert.notNull(staff, "staff 不能为空");
+
+        if(staff.getId() == null) {
+            addStaff(staff);
+        } else {
+            updateInfo(staff);
+        }
+    }
+
     public void move(int source, Integer pid, int oldSource, Integer oldPid, Long id) {
         int i = staffDao.moveStaff(source, pid, oldSource, oldPid, id);
         Assert.isTrue(i == 1, "移动失败");

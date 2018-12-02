@@ -1,5 +1,6 @@
 package cn.zlihj.web;
 
+import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
@@ -139,6 +140,20 @@ public class StaffController {
             result.setData(staff);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Result save(@RequestBody Staff staff) {
+        Result result = null;
+        try {
+            staffService.save(staff);
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("保存失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
         }
         return result;
