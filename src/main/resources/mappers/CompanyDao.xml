@@ -7,10 +7,12 @@
     <insert id="insert" parameterType="cn.zlihj.domain.Company" keyProperty="id" useGeneratedKeys="true">
         insert into company(
             name,
+            pid,
             createTime,
             updateTime
         ) values(
             #{name},
+            #{pid},
             now(),
             now()
         )
