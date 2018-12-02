@@ -5,6 +5,7 @@ import cn.zlihj.domain.Project;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.service.CompanyService;
+import cn.zlihj.util.ParamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class CompanyController {
     public Result save(@RequestBody Company company) {
         Result result = null;
         try {
+            ParamUtil.checkBean(company);
             companyService.save(company);
             result = Result.successResult();
         } catch (Exception e) {

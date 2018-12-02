@@ -3,12 +3,15 @@ package cn.zlihj.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Project {
     private Integer id;
+    @NotNull
     private String name;
+    @NotNull
     private Integer pid;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date createTime;

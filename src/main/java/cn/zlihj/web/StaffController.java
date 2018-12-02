@@ -1,6 +1,5 @@
 package cn.zlihj.web;
 
-import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @RequestMapping("/staff")
@@ -150,6 +147,8 @@ public class StaffController {
     public Result save(@RequestBody Staff staff) {
         Result result = null;
         try {
+            ParamUtil.checkBean(staff);
+            staff.setPassword(ParamUtil.md5(staff.getEmail()));
             staffService.save(staff);
             result = Result.successResult();
         } catch (Exception e) {

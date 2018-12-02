@@ -5,6 +5,7 @@ import cn.zlihj.domain.Project;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.service.ProjectService;
+import cn.zlihj.util.ParamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,7 @@ public class ProjectController {
     public Result save(@RequestBody Project project) {
         Result result = null;
         try {
+            ParamUtil.checkBean(project);
             projectService.save(project);
             result = Result.successResult();
         } catch (Exception e) {

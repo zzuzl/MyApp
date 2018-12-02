@@ -57,6 +57,7 @@
             #{email},
             #{wx},
             #{workAddress},
+            #{password},
             now(),
             now()
         )

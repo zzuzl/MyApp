@@ -5,25 +5,35 @@ import cn.zlihj.enums.Source;
 import cn.zlihj.enums.WorkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Staff {
     private Long id;
+    @NotNull
+    @Length(max = 10)
     private String name;
+    @NotNull
     private Integer pid;
     private String pname;
+    @NotNull
     private WorkType type;
+    @NotNull
     private Source source;
+    @NotNull
     private Gender gender;
     @JsonFormat(pattern = "yyyy-MM-dd", locale = "zh", timezone = "GMT+8")
     private Date birthday;
     private String school;
     private String major;
+    @NotNull
     private String phone;
     private String qq;
+    @NotNull
     private String gxtAccount;
+    @NotNull
     private String email;
     private String wx;
     private String workAddress;

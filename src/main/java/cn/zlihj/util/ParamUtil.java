@@ -1,16 +1,24 @@
 package cn.zlihj.util;
 
+import cn.zlihj.domain.Staff;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Date;
 
 public final class ParamUtil {
+    static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    static Validator validator = factory.getValidator();
     private static final String APP = "zlihj";
 
     public static String md5(String s) {
@@ -45,10 +53,11 @@ public final class ParamUtil {
         }
     }
 
-    public static void main(String[] args) {
-        String token = createToken("672399171@qq.com");
-        System.out.println(token);
-
-        System.out.println(parseToken(token));
+    public static <T> void checkBean(T checkable) {
+        Assert.notNull(checkable, "参数为空");
+        for (ConstraintViolation c : validator.validate(checkable)) {
+            throw new RuntimeException(c.getPropertyPath().toString() + ":" + c.getMessage());
+        }
     }
+
 }
