@@ -12,12 +12,12 @@ import java.util.Date;
 public enum WorkType {
     ZG(1, "总工"),
     JL(2, "技术质量部经理"),
-    ZJ(2, "质量总监"),
-    JS(2, "技术员"),
-    CL(2, "测量员"),
-    ZL(2, "资料员"),
-    SY(2, "试验员"),
-    AZ(2, "安装员");
+    ZJ(3, "质量总监"),
+    JS(4, "技术员"),
+    CL(5, "测量员"),
+    ZL(6, "资料员"),
+    SY(7, "试验员"),
+    AZ(8, "安装员");
 
     private Integer value;
     private String text;
