@@ -8,10 +8,13 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ExcelUtil {
 
@@ -19,7 +22,7 @@ public class ExcelUtil {
 	 * 从文件里面读取excel内容
 	 * 
 	 */
-	public static String[][] readFromFile(File wbFile, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
+	public static List<String[]> readFromFile(File wbFile, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
 		if (wbFile == null) {
 			return null;
 		}
@@ -30,7 +33,7 @@ public class ExcelUtil {
 	 * 从文件里面读取excel内容
 	 * 
 	 */
-	public static String[][] readFromFile(MultipartFile wbFile, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
+	public static List<String[]> readFromFile(MultipartFile wbFile, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
 		if (wbFile == null) {
 			return null;
 		}
@@ -41,7 +44,7 @@ public class ExcelUtil {
 	 * 从文件里面读取excel内容
 	 * 
 	 */
-	private static String[][] readFromFile(String name, InputStream fileInputStream, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
+	private static List<String[]> readFromFile(String name, InputStream fileInputStream, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
 		try {
 			if (name.toLowerCase().endsWith(".xlsx")) {
 				// 默认是用2007读取
@@ -55,7 +58,7 @@ public class ExcelUtil {
 		}
 	}
 
-	private static String[][] readFrom2003File(InputStream fileInputStream, int lineNum, int maxRowNum) throws OfficeXmlFileException, IOException {
+	private static List<String[]> readFrom2003File(InputStream fileInputStream, int lineNum, int maxRowNum) throws OfficeXmlFileException, IOException {
 		try {
 			// 默认是用2003读取
 			HSSFWorkbook wb = new HSSFWorkbook(fileInputStream);
@@ -65,7 +68,7 @@ public class ExcelUtil {
 		}
 	}
 
-	private static String[][] readFrom2007File(InputStream fileInputStream, int lineNum, int maxRowNum) throws OfficeXmlFileException, IOException {
+	private static List<String[]> readFrom2007File(InputStream fileInputStream, int lineNum, int maxRowNum) throws OfficeXmlFileException, IOException {
 		// 兼容2007
 		try {
 			XSSFWorkbook wb = new XSSFWorkbook(fileInputStream);
@@ -79,18 +82,23 @@ public class ExcelUtil {
 	 * 从文件里面读取excel内容
 	 * 
 	 */
-	private static String[][] readFromFile(Sheet sheet, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
-		String[][] returns;
+	private static List<String[]> readFromFile(Sheet sheet, int lineNum, int maxRowNum) throws FileNotFoundException, IOException {
+		List<String[]> returns = new ArrayList<>();
 		int lastRowNum = sheet.getLastRowNum();
 		if (maxRowNum < lastRowNum) {
 			throw new RuntimeException("超过最大行数[" + maxRowNum + "]");
 		}
-		returns = new String[lastRowNum + 1][lineNum];
 		int rowNum = 0;
 		Object tmp = null;
 		Iterator<Row> rowIterator = sheet.rowIterator();
 		while (rowIterator.hasNext()) {
 			Row next = rowIterator.next();
+			Cell first = next.getCell(0);
+			if (first == null || !StringUtils.hasText(first.getStringCellValue())) {
+				break;
+			}
+
+			String[] arr = new String[lineNum];
 			for (int j = 0; j < lineNum; j++) {
 				tmp = null;
 				Cell cell = next.getCell(j);
@@ -120,9 +128,10 @@ public class ExcelUtil {
 					}
 				}
 				if (tmp != null) {
-					returns[rowNum][j] = tmp.toString();
+					arr[j] = tmp.toString();
 				}
 			}
+			returns.add(arr);
 			rowNum++;
 		}
 		return returns;

@@ -17,7 +17,8 @@ public enum WorkType {
     CL(5, "测量员"),
     ZL(6, "资料员"),
     SY(7, "试验员"),
-    AZ(8, "安装员");
+    AZ(8, "安装员"),
+    JG(9, "技术部管理人员");
 
     private Integer value;
     private String text;

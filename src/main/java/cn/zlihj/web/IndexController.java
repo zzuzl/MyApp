@@ -96,9 +96,9 @@ public class IndexController {
                 File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
                 file.transferTo(serverFile);
                 logger.info("You successfully uploaded file=" +  file.getOriginalFilename());
-                String[][] strings = ExcelUtil.readFromFile(serverFile, 1, 1000);
-                for (int i=1;i<strings.length;i++) {
-                    String[] string = strings[i];
+                List<String[]> strings = ExcelUtil.readFromFile(serverFile, 14, 1000);
+                for (int i=1;i<strings.size();i++) {
+                    String[] string = strings.get(i);
                     Staff staff = new Staff();
                     staff.setName(string[0]);
                     staff.setType(WorkType.ofText(string[1]));
@@ -120,6 +120,7 @@ public class IndexController {
                     Assert.hasText(staff.getEmail(), "email不能为空,行号:" + i);
                     Assert.hasText(staff.getName(), "姓名不能为空,行号:" + i);
                     Assert.notNull(staff.getGender(), "性别不能为空,行号:" + i);
+                    Assert.notNull(staff.getType(), "类型不能为空,行号:" + i);
 
                     String pname = string[13];
                     if (staff.getSource() == Source.COMPANY) {
@@ -135,7 +136,7 @@ public class IndexController {
                     try {
                         staffService.addStaff(staff);
                     } catch (DataIntegrityViolationException e) {
-                        logger.error("已存在：" + Arrays.toString(string));
+                        logger.error("已存在：" + Arrays.toString(string), e);
                         continue;
                     }
 
