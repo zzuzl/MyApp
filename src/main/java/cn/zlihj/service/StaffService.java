@@ -47,7 +47,7 @@ public class StaffService {
     }
 
     public void changePassword(String email, String oldPassword, String newPassword) {
-        int count = staffDao.changePassword(email, oldPassword, newPassword);
+        int count = staffDao.changePassword(email, ParamUtil.md5(oldPassword), ParamUtil.md5(newPassword));
         Assert.isTrue(count == 1, "修改失败");
     }
 

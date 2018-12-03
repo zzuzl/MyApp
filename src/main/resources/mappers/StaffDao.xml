@@ -110,7 +110,7 @@
     </select>
 
     <update id="changePassword" >
-        update staff set password=#{newPassword} where email=#{email} and password=#{newPassword}
+        update staff set password=#{newPassword}, updateTime=now() where email=#{email} and password=#{newPassword}
     </update>
 
     <update id="updateInfo" parameterType="cn.zlihj.domain.Staff">
