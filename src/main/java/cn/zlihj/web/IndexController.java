@@ -130,17 +130,14 @@ public class IndexController {
                     } else if (staff.getSource() == Source.PROJECT) {
                         Project project = projectService.findByName(pname);
                         Assert.notNull(project, "对应项目不存在,行号：" + i);
-                        staff.setPid(project.getPid());
+                        staff.setPid(project.getId());
                     }
 
                     try {
                         staffService.addStaff(staff);
                     } catch (DataIntegrityViolationException e) {
-                        logger.error("已存在：" + Arrays.toString(string), e);
-                        continue;
+                        logger.error("已存在：" + Arrays.toString(string));
                     }
-
-                    logger.info(Arrays.toString(string));
                 }
 
                 serverFile.deleteOnExit();
