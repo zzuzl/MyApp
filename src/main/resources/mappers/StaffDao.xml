@@ -90,6 +90,9 @@
         <if test="key != null">
             and name like '%${key}%'
         </if>
+        <if test="type != null">
+            and type=#{type}
+        </if>
         order by id
         limit ${from},${size}
     </select>

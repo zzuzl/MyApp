@@ -3,6 +3,7 @@ package cn.zlihj.dao;
 import cn.zlihj.domain.SearchVo;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.domain.VersionInfo;
+import cn.zlihj.enums.WorkType;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public interface StaffDao {
     List<Staff> pageList(@Param("from") int from,
                          @Param("size") int size,
                          @Param("source") Integer source,
+                         @Param("type") WorkType type,
                          @Param("pid") Integer pid,
                          @Param("key") String key);
 

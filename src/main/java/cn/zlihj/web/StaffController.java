@@ -4,6 +4,7 @@ import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.enums.Source;
+import cn.zlihj.enums.WorkType;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.ProjectService;
 import cn.zlihj.service.StaffService;
@@ -102,10 +103,12 @@ public class StaffController {
     @ResponseBody
     public ListResult<Staff> findByPid(@RequestParam("source") Integer source,
                                        Integer pid,
+                                       Integer type,
                                        @RequestParam("page") Integer page) {
         ListResult<Staff> result = null;
         try {
-            result = staffService.pageList(page, 20, Source.of(source), pid, null);
+            WorkType workType = WorkType.of(type);
+            result = staffService.pageList(page, 20, Source.of(source), workType, pid, null);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());
@@ -118,7 +121,7 @@ public class StaffController {
     public ListResult<Staff> list(@RequestParam("page") Integer page, String key) {
         ListResult<Staff> result = null;
         try {
-            result = staffService.pageList(page, 50, null, null, key);
+            result = staffService.pageList(page, 50, null, null, null, key);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());

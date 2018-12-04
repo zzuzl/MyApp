@@ -64,10 +64,16 @@ public class StaffService {
         return staffDao.findByEmail(email);
     }
 
-    public ListResult<Staff> pageList(int page, int size, Source source, Integer pid, String key) {
+    public ListResult<Staff> pageList(int page,
+                                      int size,
+                                      Source source,
+                                      WorkType type,
+                                      Integer pid,
+                                      String key) {
         List<Staff> list = staffDao.pageList((page - 1) * size,
                 size,
                 source == null ? null : source.value(),
+                type,
                 pid,
                 key);
 
