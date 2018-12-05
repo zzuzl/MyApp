@@ -13,6 +13,7 @@ import cn.zlihj.util.ExcelUtil;
 import cn.zlihj.util.LoginContext;
 import cn.zlihj.util.ParamUtil;
 import com.fasterxml.jackson.core.util.VersionUtil;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,10 +60,27 @@ public class IndexController {
 
     @RequestMapping("/checkVersion")
     @ResponseBody
-    public Result checkVersion() {
+    public Result checkVersion(String uuid) {
         Result result = Result.successResult();
         VersionInfo maxVersion = staffService.findMaxVersion();
         result.setData(maxVersion);
+
+        /*if (StringUtils.hasText(uuid) && staffService.findUuid(uuid) != null) {
+
+        }*/
+        return result;
+    }
+
+    @RequestMapping("/reportUuid")
+    @ResponseBody
+    public Result reportUuid(@RequestParam String uuid) {
+        Result result = Result.successResult();
+        try {
+            staffService.insertIosUuid(uuid);
+        } catch (DataIntegrityViolationException e) {
+            logger.error("uuid已存在：" + uuid);
+        }
+
         return result;
     }
 

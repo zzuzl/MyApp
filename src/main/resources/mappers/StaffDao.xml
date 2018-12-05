@@ -139,4 +139,12 @@
     <select id="findMaxVersion" resultType="cn.zlihj.domain.VersionInfo">
         select * from version_config order by id desc limit 1
     </select>
+
+    <insert id="insertIosUuid">
+        insert into ios_uuid(uuid) values(#{uuid})
+    </insert>
+
+    <select id="findUuid" resultType="java.lang.String">
+        select uuid from ios_uuid where uuid=#{uuid}
+    </select>
 </mapper>

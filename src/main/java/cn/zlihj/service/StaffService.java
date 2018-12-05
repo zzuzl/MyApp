@@ -141,4 +141,12 @@ public class StaffService {
     public VersionInfo findMaxVersion() {
         return staffDao.findMaxVersion();
     }
+
+    public void insertIosUuid(String uuid) {
+        staffDao.insertIosUuid(uuid);
+    }
+
+    public String findUuid(String uuid) {
+        return staffDao.findUuid(uuid);
+    }
 }

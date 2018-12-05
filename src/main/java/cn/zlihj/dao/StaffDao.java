@@ -41,4 +41,8 @@ public interface StaffDao {
     List<SearchVo> searchAll(@Param("key") String key);
 
     VersionInfo findMaxVersion();
+
+    String findUuid(@Param("uuid") String uuid);
+
+    void insertIosUuid(@Param("uuid") String uuid);
 }

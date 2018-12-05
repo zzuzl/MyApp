@@ -74,4 +74,12 @@ public class SpringTest {
         ListResult<Staff> list = staffService.pageList(1, 20, null, WorkType.ZG, null, null);
         System.out.println(list.getSize());
     }
+
+    @Test
+    public void testUuid() {
+        staffService.insertIosUuid("123456");
+        System.out.println(staffService.findUuid("123"));
+        System.out.println(staffService.findUuid("123456"));
+        staffService.insertIosUuid("123456");
+    }
 }
