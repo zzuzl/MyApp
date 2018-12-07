@@ -13,6 +13,8 @@ import cn.zlihj.util.ExcelUtil;
 import cn.zlihj.util.LoginContext;
 import cn.zlihj.util.ParamUtil;
 import com.fasterxml.jackson.core.util.VersionUtil;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -23,12 +25,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +49,8 @@ public class IndexController {
     private ProjectService projectService;
     @Autowired
     private StaffService staffService;
+    @Autowired
+    private Producer captchaProducer;
 
     @RequestMapping("/index")
     public String index(Model model) {
@@ -171,5 +179,42 @@ public class IndexController {
         }
 
         return "index";
+    }
+
+    @RequestMapping(value = "/vt", method = RequestMethod.GET)
+    public String sendPasswordEmail(String t) {
+        ListResult<SearchVo> result = null;
+
+        String code = "code";
+        String token = ParamUtil.createToken(code, 20);
+
+        return "";
+    }
+
+    @RequestMapping("/captcha-image")
+    public ModelAndView captchaImage(
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        response.setDateHeader("Expires", 0);
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+        response.setHeader("Pragma", "no-cache");
+
+        response.setContentType("image/jpeg");
+        String capText = captchaProducer.createText();
+
+        Cookie cookie = new Cookie(Constants.KAPTCHA_SESSION_KEY, capText);
+        response.addCookie(cookie);
+
+        BufferedImage bi = captchaProducer.createImage(capText);
+        ServletOutputStream out = response.getOutputStream();
+
+        ImageIO.write(bi, "jpg", out);
+        try {
+            out.flush();
+        } finally {
+            out.close();
+        }
+        return null;
     }
 }

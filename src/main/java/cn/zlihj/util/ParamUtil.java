@@ -53,6 +53,18 @@ public final class ParamUtil {
         }
     }
 
+    public static String createToken(String text, int minutes) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(APP);
+            return JWT.create()
+                    .withIssuer(text)
+                    .withExpiresAt(new Date(System.currentTimeMillis() + minutes * 60000))
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            throw new RuntimeException("token创建失败:" + text);
+        }
+    }
+
     public static <T> void checkBean(T checkable) {
         Assert.notNull(checkable, "参数为空");
         for (ConstraintViolation c : validator.validate(checkable)) {

@@ -3,9 +3,7 @@ package test;
 import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Project;
 import cn.zlihj.domain.Staff;
-import cn.zlihj.domain.VersionInfo;
 import cn.zlihj.dto.ListResult;
-import cn.zlihj.enums.Source;
 import cn.zlihj.enums.WorkType;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.ProjectService;
@@ -13,6 +11,8 @@ import cn.zlihj.service.StaffService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,6 +25,8 @@ public class SpringTest {
     private ProjectService projectService;
     @Autowired
     private StaffService staffService;
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
     @Test
     public void testInsert() {
@@ -51,6 +53,9 @@ public class SpringTest {
         /*System.out.println(staffService.searchAll("zl"));
         System.out.println(staffService.searchAll("锦艺"));*/
         // System.out.println(staffService.pageList(1, 20, null, null).getTotal());
+
+        System.out.println(staffService.searchAll("张"));
+        System.out.println(staffService.searchAll("传"));
     }
 
     @Test
@@ -81,5 +86,15 @@ public class SpringTest {
         System.out.println(staffService.findUuid("123"));
         System.out.println(staffService.findUuid("123456"));
         staffService.insertIosUuid("123456");
+    }
+
+    @Test
+    public void testMail() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("zlihj_no_reply@qq.com");
+        message.setTo("zl672399171@gmail.com");
+        message.setSubject("重置密码");
+        message.setText("重置密码");
+        javaMailSender.send(message);
     }
 }
