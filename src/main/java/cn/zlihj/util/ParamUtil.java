@@ -9,12 +9,14 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Date;
+import java.util.UUID;
 
 public final class ParamUtil {
     static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -70,6 +72,11 @@ public final class ParamUtil {
         for (ConstraintViolation c : validator.validate(checkable)) {
             throw new RuntimeException(c.getPropertyPath().toString() + ":" + c.getMessage());
         }
+    }
+
+    public static String randomUuid() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
 }

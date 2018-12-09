@@ -49,13 +49,6 @@ public class IndexController {
     private ProjectService projectService;
     @Autowired
     private StaffService staffService;
-    @Autowired
-    private Producer captchaProducer;
-
-    @RequestMapping("/index")
-    public String index(Model model) {
-        return "index";
-    }
 
     @RequestMapping("/checkLogin")
     @ResponseBody
@@ -106,115 +99,5 @@ public class IndexController {
             result = ListResult.errorList(e.getMessage());
         }
         return result;
-    }
-
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String uploadFile( @RequestParam("file") MultipartFile file, Model model) {
-        Result result = null;
-        try {
-            if (!file.isEmpty()) {
-                if (!FilenameUtils.isExtension(file.getOriginalFilename(), "xls")) {
-                    throw new RuntimeException("仅支持.xls文件");
-                }
-
-                String rootPath = "/tmp";
-                File dir = new File(rootPath + File.separator + "tmpFiles");
-                if (!dir.exists()) {
-                    Assert.isTrue(dir.mkdirs(), "文件夹创建失败");
-                }
-                File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
-                file.transferTo(serverFile);
-                logger.info("You successfully uploaded file=" +  file.getOriginalFilename());
-                List<String[]> strings = ExcelUtil.readFromFile(serverFile, 14, 1000);
-                for (int i=1;i<strings.size();i++) {
-                    String[] string = strings.get(i);
-                    Staff staff = new Staff();
-                    staff.setName(string[0]);
-                    staff.setType(WorkType.ofText(string[1]));
-                    staff.setGender(Gender.ofText(string[2]));
-                    staff.setSchool(string[3]);
-                    staff.setMajor(string[4]);
-                    staff.setPhone(string[5]);
-                    staff.setQq(string[6]);
-                    staff.setWx(string[7]);
-                    staff.setGxtAccount(string[8]);
-                    staff.setEmail(string[9]);
-                    staff.setWorkAddress(string[10]);
-                    staff.setPassword(ParamUtil.md5(string[11]));
-                    staff.setSource(Source.ofText(string[12]));
-
-                    if (staff.getSource() == null) {
-                        throw new RuntimeException("来源错误，行号:" + i);
-                    }
-                    Assert.hasText(staff.getEmail(), "email不能为空,行号:" + i);
-                    Assert.hasText(staff.getName(), "姓名不能为空,行号:" + i);
-                    Assert.notNull(staff.getGender(), "性别不能为空,行号:" + i);
-                    Assert.notNull(staff.getType(), "类型不能为空,行号:" + i);
-
-                    String pname = string[13];
-                    if (staff.getSource() == Source.COMPANY) {
-                        Company company = companyService.findByName(pname);
-                        Assert.notNull(company, "对应部门不存在,行号：" + i);
-                        staff.setPid(company.getId());
-                    } else if (staff.getSource() == Source.PROJECT) {
-                        Project project = projectService.findByName(pname);
-                        Assert.notNull(project, "对应项目不存在,行号：" + i);
-                        staff.setPid(project.getId());
-                    }
-
-                    try {
-                        staffService.addStaff(staff);
-                    } catch (DataIntegrityViolationException e) {
-                        logger.error("已存在：" + Arrays.toString(string));
-                    }
-                }
-
-                serverFile.deleteOnExit();
-            } else {
-                logger.error("You failed to upload " +  file.getOriginalFilename() + " because the file was empty.");
-            }
-        } catch (Exception e) {
-            logger.error("上传失败：{}", e.getMessage(), e);
-            result = Result.errorResult(e.getMessage());
-        }
-
-        return "index";
-    }
-
-    @RequestMapping(value = "/vt", method = RequestMethod.GET)
-    public String sendPasswordEmail(String t) {
-        ListResult<SearchVo> result = null;
-
-        String code = "code";
-        String token = ParamUtil.createToken(code, 20);
-
-        return "";
-    }
-
-    @RequestMapping("/captcha-image")
-    public ModelAndView captchaImage(
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        response.setDateHeader("Expires", 0);
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-        response.setHeader("Pragma", "no-cache");
-
-        response.setContentType("image/jpeg");
-        String capText = captchaProducer.createText();
-
-        Cookie cookie = new Cookie(Constants.KAPTCHA_SESSION_KEY, capText);
-        response.addCookie(cookie);
-
-        BufferedImage bi = captchaProducer.createImage(capText);
-        ServletOutputStream out = response.getOutputStream();
-
-        ImageIO.write(bi, "jpg", out);
-        try {
-            out.flush();
-        } finally {
-            out.close();
-        }
-        return null;
     }
 }
