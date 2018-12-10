@@ -79,33 +79,30 @@ public class ResourceController {
         try {
             Assert.hasText(email, "email为空");
             Assert.hasText(code, "验证码为空");
-            Assert.notNull(staffService.findByEmail(email), "该邮箱对应的用户不存在");
 
             boolean success = false;
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(Constants.KAPTCHA_SESSION_KEY)) {
-                        String value = cache.getIfPresent(cookie.getValue());
-                        if (value != null && value.equalsIgnoreCase(code)) {
-                            success = true;
-                            // send
-                            String token = ParamUtil.createToken(code, 20);
-                            MimeMessagePreparator preparator = new MimeMessagePreparator() {
-                                public void prepare(MimeMessage mimeMessage) throws Exception {
-                                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                                    message.setTo(email);
-                                    message.setFrom("zlihj_no_reply@qq.com");
-                                    Map<String, Object> model = new HashMap<>();
-                                    model.put("url", "http://www.zlihj.cn/rest/vt?t=" + token + "&e=" + email);
-                                    String text = VelocityEngineUtils.mergeTemplateIntoString(
-                                            velocityEngine, "vm/reset_password.vm", model);
-                                    message.setText(text, true);
-                                }
-                            };
-                            javaMailSender.send(preparator);
+            String header = request.getHeader(Constants.KAPTCHA_SESSION_KEY);
+
+            if (header != null) {
+                String value = cache.getIfPresent(header);
+                if (code.equalsIgnoreCase(value)) {
+                    Assert.notNull(staffService.findByEmail(email), "该邮箱对应的用户不存在");
+                    success = true;
+                    // send
+                    String token = ParamUtil.createToken(email, 20);
+                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                        public void prepare(MimeMessage mimeMessage) throws Exception {
+                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                            message.setTo(email);
+                            message.setFrom("zlihj_no_reply@qq.com");
+                            Map<String, Object> model = new HashMap<>();
+                            model.put("url", "http://www.zlihj.cn/rest/vt?t=" + token + "&e=" + email);
+                            String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                    velocityEngine, "reset_password.vm", model);
+                            message.setText(text, true);
                         }
-                    }
+                    };
+                    javaMailSender.send(preparator);
                 }
             }
 
@@ -120,7 +117,20 @@ public class ResourceController {
 
     @RequestMapping("/vt")
     public String vt(String t, String e, Model model) {
-        String s = ParamUtil.parseToken(t);
+        model.addAttribute("success", false);
+        model.addAttribute("msg", "发生错误，请重新操作");
+        try {
+            if (t != null && e != null) {
+                String s = ParamUtil.parseToken(t);
+                if (e.equals(s)) {
+                    model.addAttribute("success", true);
+                    model.addAttribute("msg", "");
+                }
+            }
+        } catch (Exception ex) {
+            model.addAttribute("success", false);
+            model.addAttribute("msg", "发生错误，请重新操作");
+        }
 
         return "vt";
     }
@@ -138,6 +148,7 @@ public class ResourceController {
         String randomUuid = ParamUtil.randomUuid();
         Cookie cookie = new Cookie(Constants.KAPTCHA_SESSION_KEY, randomUuid);
         cookie.setDomain(request.getServerName());
+        cookie.setPath("/");
         response.addCookie(cookie);
         cache.put(randomUuid, capText);
 

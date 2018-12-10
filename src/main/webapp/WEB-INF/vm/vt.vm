@@ -4,6 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>
-    验证结果：
+    <div style="width: 60%; height: 50%; margin: 0 auto; margin-top: 200px">
+        <label>邮箱：${email}</label>
+        <label>新密码：</label>
+        <input type="password" name="password"/>
+        <input type="password" name="password2"/>
+    </div>
 </body>
 </html>
