@@ -147,4 +147,8 @@
     <select id="findUuid" resultType="java.lang.String">
         select uuid from ios_uuid where uuid=#{uuid}
     </select>
+
+    <update id="resetPwd">
+        update staff set password=#{pwd}, updateTime=now() where email=#{email}
+    </update>
 </mapper>

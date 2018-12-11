@@ -119,6 +119,10 @@ public class StaffService {
         return staff;
     }
 
+    public void resetPwd(String email, String pwd) {
+        Assert.isTrue(staffDao.resetPwd(email, pwd) == 1, "重置密码失败");
+    }
+
     public void save(Staff staff) {
         Assert.notNull(staff, "staff 不能为空");
 

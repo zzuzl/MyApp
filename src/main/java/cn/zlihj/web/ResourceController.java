@@ -2,7 +2,6 @@ package cn.zlihj.web;
 
 import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Project;
-import cn.zlihj.domain.SearchVo;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
@@ -18,7 +17,6 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
@@ -32,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,7 +115,9 @@ public class ResourceController {
     }
 
     @RequestMapping("/vt")
-    public String vt(String t, String e, Model model) {
+    public String vt(String t, String e, String pwd, Model model) {
+        model.addAttribute("t", t);
+        model.addAttribute("e", e);
         model.addAttribute("success", false);
         model.addAttribute("msg", "发生错误，请重新操作");
         try {
@@ -125,11 +126,16 @@ public class ResourceController {
                 if (e.equals(s)) {
                     model.addAttribute("success", true);
                     model.addAttribute("msg", "");
+
+                    if (pwd != null) {
+                        Assert.isTrue(pwd.trim().length() >= 6 && pwd.length() <= 30, "密码长度[6-30]");
+                        staffService.resetPwd(e, pwd.trim());
+                    }
                 }
             }
         } catch (Exception ex) {
             model.addAttribute("success", false);
-            model.addAttribute("msg", "发生错误，请重新操作");
+            model.addAttribute("msg", "发生错误，请重新操作:" + ex.getMessage());
         }
 
         return "vt";

@@ -2,13 +2,43 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://cdn.bootcss.com/jquery/2.1.2/jquery.min.js"></script>
 </head>
 <body>
     <div style="width: 60%; height: 50%; margin: 0 auto; margin-top: 200px">
-        <label>邮箱：${email}</label>
-        <label>新密码：</label>
-        <input type="password" name="password"/>
-        <input type="password" name="password2"/>
+        <label>邮箱：${e}</label>
+        #if ($success == true)
+            <h2>${msg}</h2>
+        #else
+            <h2>${msg}</h2>
+        #end
+        <form method="post" onsubmit="return check();">
+            <label>新密码：</label>
+            <input type="password" name="password"/>
+            <label>重复新密码：</label>
+            <input type="password" name="password2"/>
+            <input type="submit" value="重置密码"/>
+        </form>
     </div>
+
+<script type="application/javascript">
+    function check() {
+        var pwd = $("input[name=password]").val();
+        var pwd2 = $("input[name=password2]").val();
+
+        if (!pwd || pwd2) {
+            alert('请输入密码');
+            return false;
+        } else if (pwd !== pwd2) {
+            alert('两次输入密码不一致');
+            return false;
+        } else if (pwd.length < 6 || pwd.length > 30) {
+            alert('密码位数[6-30]');
+            return false;
+        }
+
+        return true;
+    }
+</script>
 </body>
 </html>

@@ -45,4 +45,7 @@ public interface StaffDao {
     String findUuid(@Param("uuid") String uuid);
 
     void insertIosUuid(@Param("uuid") String uuid);
+
+    int resetPwd(@Param("email") String email,
+                 @Param("pwd") String pwd);
 }
