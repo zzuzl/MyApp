@@ -124,6 +124,7 @@ public class ResourceController {
             if (t != null && e != null) {
                 String s = ParamUtil.parseToken(t);
                 if (e.equals(s)) {
+                    Assert.notNull(staffService.findByEmail(e), "用户不存在");
                     model.addAttribute("success", true);
                     model.addAttribute("msg", "");
 
@@ -135,7 +136,7 @@ public class ResourceController {
             }
         } catch (Exception ex) {
             model.addAttribute("success", false);
-            model.addAttribute("msg", "发生错误，请重新操作:" + ex.getMessage());
+            model.addAttribute("msg", ex.getMessage());
         }
 
         return "vt";

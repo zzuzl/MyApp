@@ -26,7 +26,7 @@
         var pwd = $("input[name=password]").val();
         var pwd2 = $("input[name=password2]").val();
 
-        if (!pwd || pwd2) {
+        if (!pwd || !pwd2) {
             alert('请输入密码');
             return false;
         } else if (pwd !== pwd2) {
