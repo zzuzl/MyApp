@@ -30,7 +30,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -171,13 +170,34 @@ public class ResourceController {
         return null;
     }
 
+    @RequestMapping(value = "/downloadTpl", method = RequestMethod.GET)
+    public void downloadTpl(HttpServletResponse response) {
+        List<Company> companies = companyService.list(0);
+        List<Project> projects = projectService.list(0);
+
+        String[] arr = new String[companies.size() + projects.size()];
+        int i=0;
+        for (Company company : companies) {
+            arr[i] = company.getName();
+            i ++;
+        }
+
+        for (Project project : projects) {
+            arr[i] = project.getName();
+            i ++;
+        }
+
+        ExcelUtil.downloadTemplate(response, "导入模板.xlsx", arr);
+    }
+
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
         Result result = null;
         try {
             if (!file.isEmpty()) {
-                if (!FilenameUtils.isExtension(file.getOriginalFilename(), "xls")) {
-                    throw new RuntimeException("仅支持.xls文件");
+                if (!FilenameUtils.isExtension(file.getOriginalFilename(), "xlsx")
+                        || !FilenameUtils.isExtension(file.getOriginalFilename(), "xls")) {
+                    throw new RuntimeException("仅支持.xlsx和.xls文件");
                 }
 
                 String rootPath = "/tmp";
@@ -203,8 +223,8 @@ public class ResourceController {
                     staff.setGxtAccount(string[8]);
                     staff.setEmail(string[9]);
                     staff.setWorkAddress(string[10]);
-                    staff.setPassword(ParamUtil.md5(string[11]));
-                    staff.setSource(Source.ofText(string[12]));
+                    staff.setPassword(ParamUtil.md5(staff.getEmail()));
+                    staff.setSource(Source.ofText(string[11]));
 
                     if (staff.getSource() == null) {
                         throw new RuntimeException("来源错误，行号:" + i);
@@ -214,7 +234,7 @@ public class ResourceController {
                     Assert.notNull(staff.getGender(), "性别不能为空,行号:" + i);
                     Assert.notNull(staff.getType(), "类型不能为空,行号:" + i);
 
-                    String pname = string[13];
+                    String pname = string[12];
                     if (staff.getSource() == Source.COMPANY) {
                         Company company = companyService.findByName(pname);
                         Assert.notNull(company, "对应部门不存在,行号：" + i);
