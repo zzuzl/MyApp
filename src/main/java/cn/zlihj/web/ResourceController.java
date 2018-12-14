@@ -199,12 +199,21 @@ public class ResourceController {
 
     @RequestMapping("/receiveIosData")
     public void receiveIosData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String udid = "";
         try {
             InputStream is = request.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+            StringBuilder sb = new StringBuilder();
+
+            String buffer = null;
+            while ((buffer = br.readLine()) != null) {
+                sb.append(buffer);
+            }
+            logger.info("receiveIosData:" + sb.toString());
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.parse(is);
+            Document document = db.parse(sb.toString());
             NodeList dict = document.getElementsByTagName("dict");
             Node item = dict.item(0);
 
@@ -214,19 +223,17 @@ public class ResourceController {
                 Node node = childNodes.item(i);
                 logger.info(node.getNodeName() + " : " + node.getNodeValue());
                 if (node.getNodeValue().equalsIgnoreCase("UDID")) {
-                    String udid = node.getNextSibling().getNodeValue();
+                    udid = node.getNextSibling().getNodeValue();
                     logger.info("UDID:" + udid);
-
-                    // 301之后iOS设备会自动打开safari浏览器
-                    response.setStatus(301);
-                    response.setHeader("Location", "https://www.zlihj.cn/rest/resource/reportUuid?uuid=" + udid);
-
                     break;
                 }
             }
         } catch (Exception e) {
             logger.error("receiveIosData", e);
         }
+        // 301之后iOS设备会自动打开safari浏览器
+        response.setStatus(301);
+        response.setHeader("Location", "https://www.zlihj.cn/rest/resource/reportUuid?uuid=" + udid);
     }
 
     @RequestMapping("/reportUuid")
