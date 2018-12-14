@@ -209,11 +209,12 @@ public class ResourceController {
             while ((buffer = br.readLine()) != null) {
                 sb.append(buffer);
             }
-            logger.info("receiveIosData:" + sb.toString());
+            String content = sb.toString().substring(sb.toString().indexOf("<?xml"), sb.toString().indexOf("</plist>")+8);
+            logger.info("receiveIosData:" + content);
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.parse(sb.toString());
+            Document document = db.parse(content);
             NodeList dict = document.getElementsByTagName("dict");
             Node item = dict.item(0);
 
