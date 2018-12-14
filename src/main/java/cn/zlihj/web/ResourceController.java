@@ -51,10 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -184,10 +181,11 @@ public class ResourceController {
     public ModelAndView mobileConfig(HttpServletResponse response) throws Exception {
         response.setContentType("application/x-apple-aspen-config");
 
-        File file = ResourceUtils.getFile("classpath:mobileConfig.xml");
+        File file = ResourceUtils.getFile("classpath:mobileconfig.xml");
         String xml = FileUtils.readFileToString(file);
 
-        ServletOutputStream out = response.getOutputStream();
+        response.setCharacterEncoding("utf-8");
+        PrintWriter out = response.getWriter();
         out.println(xml);
         logger.info("mobileConfig:" + xml);
 

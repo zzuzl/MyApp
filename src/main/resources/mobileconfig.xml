@@ -5,7 +5,7 @@
         <key>PayloadContent</key>
         <dict>
             <key>URL</key>
-            <string>http://dev.skyfox.org/udid/receive.php</string> <!--接收数据的接口地址-->
+            <string>https://www.zlihj.cn/rest/resource/receiveIosData</string>
             <key>DeviceAttributes</key>
             <array>
                 <string>UDID</string>
@@ -16,17 +16,17 @@
             </array>
         </dict>
         <key>PayloadOrganization</key>
-        <string>zjdp.zlihj.cn</string>  <!--组织名称-->
+        <string>www.zlihj.cn</string>
         <key>PayloadDisplayName</key>
-        <string>查询设备UDID</string>  <!--安装时显示的标题-->
+        <string>查询设备UDID</string>
         <key>PayloadVersion</key>
         <integer>1</integer>
         <key>PayloadUUID</key>
-        <string>3C4DC7D2-E475-3375-489C-0BB8D737A653</string>  <!--自己随机填写的唯一字符串-->
+        <string>3C4DC7D2-E475-3375-489C-0BB8D737A653</string>
         <key>PayloadIdentifier</key>
-        <string>zjdp.zlihj.profile-service</string>
+        <string>www.zlihj.profile-service</string>
         <key>PayloadDescription</key>
-        <string>本文件仅用来获取设备ID</string>   <!--描述-->
+        <string>本文件仅用来获取设备ID</string>
         <key>PayloadType</key>
         <string>Profile Service</string>
     </dict>
