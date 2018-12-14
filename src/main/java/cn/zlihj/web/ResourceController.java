@@ -20,6 +20,9 @@ import com.google.common.cache.CacheBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.app.VelocityEngine;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,18 +41,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import javax.imageio.ImageIO;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
@@ -212,20 +209,17 @@ public class ResourceController {
             String content = sb.toString().substring(sb.toString().indexOf("<?xml"), sb.toString().indexOf("</plist>")+8);
             logger.info("receiveIosData:" + content);
 
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.parse(content);
-            NodeList dict = document.getElementsByTagName("dict");
-            Node item = dict.item(0);
+            Document document = DocumentHelper.parseText(content);
 
-            NodeList childNodes = item.getChildNodes();
+            //获取根节点对象
+            Element rootElement = document.getRootElement();
+            Iterator iterator = rootElement.element("dict").elementIterator();
 
-            for (int i=0;i<childNodes.getLength();i++) {
-                Node node = childNodes.item(i);
-                logger.info(node.getNodeName() + " : " + node.getNodeValue());
-                if (node.getNodeValue().equalsIgnoreCase("UDID")) {
-                    udid = node.getNextSibling().getNodeValue();
-                    logger.info("UDID:" + udid);
+            while (iterator.hasNext()) {
+                Element next = (Element) iterator.next();
+                if (next.getStringValue().equalsIgnoreCase("UDID")) {
+                    udid = ((Element) iterator.next()).getStringValue();
+                    logger.info("udid:" + udid);
                     break;
                 }
             }

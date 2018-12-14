@@ -16,10 +16,17 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.junit.Test;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 public class SimpleTest {
     private static File indexFile = new File("/Users/zhanglei53/index");
@@ -72,5 +79,21 @@ public class SimpleTest {
             System.out.println(hit.getField("name").stringValue());
         }
         directory.close();
+    }
+
+    public static void main(String[] args) throws Exception {
+        String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict>\t<key>IMEI</key>\t<string>35 699606 779422 1</string>\t<key>PRODUCT</key>\t<string>iPhone7,1</string>\t<key>UDID</key>\t<string>e7d7b1c194da9e6b87b06d91f68c305ece5ae1f2</string>\t<key>VERSION</key>\t<string>16A366</string></dict></plist>";
+        org.dom4j.Document document = DocumentHelper.parseText(content);
+
+        //获取根节点对象
+        Element rootElement = document.getRootElement();
+        Iterator iterator = rootElement.element("dict").elementIterator();
+
+        while (iterator.hasNext()) {
+            Element next = (Element) iterator.next();
+            if (next.getStringValue().equalsIgnoreCase("UDID")) {
+                System.out.println(((Element) iterator.next()).getStringValue());
+            }
+        }
     }
 }
