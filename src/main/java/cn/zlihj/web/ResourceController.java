@@ -179,7 +179,7 @@ public class ResourceController {
         response.setContentType("application/x-apple-aspen-config");
 
         try {
-            File file = ResourceUtils.getFile("classpath:mobileconfig.xml");
+            File file = ResourceUtils.getFile("classpath:udid_signed.mobileconfig");
             String xml = FileUtils.readFileToString(file, "utf-8");
 
             response.setCharacterEncoding("utf-8");
