@@ -178,44 +178,63 @@ public class ResourceController {
     }
 
     @RequestMapping("/mobileConfig")
-    public ModelAndView mobileConfig(HttpServletResponse response) throws Exception {
+    public ModelAndView mobileConfig(HttpServletResponse response) {
         response.setContentType("application/x-apple-aspen-config");
 
-        File file = ResourceUtils.getFile("classpath:mobileconfig.xml");
-        String xml = FileUtils.readFileToString(file);
-
-        response.setCharacterEncoding("utf-8");
-        PrintWriter out = response.getWriter();
-        out.println(xml);
-        logger.info("mobileConfig:" + xml);
-
         try {
+            File file = ResourceUtils.getFile("classpath:mobileconfig.xml");
+            String xml = FileUtils.readFileToString(file, "utf-8");
+
+            response.setCharacterEncoding("utf-8");
+            PrintWriter out = response.getWriter();
+            out.println(xml);
             out.flush();
-        } finally {
             out.close();
+        } catch (Exception e) {
+            logger.error("mobileConfig", e);
         }
+
         return null;
     }
 
     @RequestMapping("/receiveIosData")
-    public void receiveIosData(HttpServletRequest request) throws Exception {
-        InputStream is = request.getInputStream();
+    public void receiveIosData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            InputStream is = request.getInputStream();
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document document = db.parse(is);
-        NodeList dict = document.getElementsByTagName("dict");
-        Node item = dict.item(0);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document document = db.parse(is);
+            NodeList dict = document.getElementsByTagName("dict");
+            Node item = dict.item(0);
 
-        NodeList childNodes = item.getChildNodes();
+            NodeList childNodes = item.getChildNodes();
 
-        for (int i=0;i<childNodes.getLength();i++) {
-            Node node = childNodes.item(i);
-            logger.info(node.getNodeName() + " : " + node.getNodeValue());
-            if (node.getNodeValue().equalsIgnoreCase("UDID")) {
-                logger.info("UDID:" + node.getNextSibling().getNodeValue());
-                break;
+            for (int i=0;i<childNodes.getLength();i++) {
+                Node node = childNodes.item(i);
+                logger.info(node.getNodeName() + " : " + node.getNodeValue());
+                if (node.getNodeValue().equalsIgnoreCase("UDID")) {
+                    String udid = node.getNextSibling().getNodeValue();
+                    logger.info("UDID:" + udid);
+
+                    // 301之后iOS设备会自动打开safari浏览器
+                    response.setStatus(301);
+                    response.setHeader("Location", "https://www.zlihj.cn/rest/resource/reportUuid?uuid=" + udid);
+
+                    break;
+                }
             }
+        } catch (Exception e) {
+            logger.error("receiveIosData", e);
+        }
+    }
+
+    @RequestMapping("/reportUuid")
+    public void reportUuid(@RequestParam String uuid) {
+        try {
+            staffService.insertIosUuid(uuid);
+        } catch (Exception e) {
+            logger.error("reportUuid：", e);
         }
     }
 
