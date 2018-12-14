@@ -17,6 +17,7 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
@@ -30,12 +31,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import javax.mail.internet.MimeMessage;
@@ -43,8 +48,13 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -168,6 +178,47 @@ public class ResourceController {
             out.close();
         }
         return null;
+    }
+
+    @RequestMapping("/mobileConfig")
+    public ModelAndView mobileConfig(HttpServletResponse response) throws Exception {
+        response.setContentType("application/x-apple-aspen-config");
+
+        File file = ResourceUtils.getFile("classpath:mobileConfig.xml");
+        String xml = FileUtils.readFileToString(file);
+
+        ServletOutputStream out = response.getOutputStream();
+        out.println(xml);
+        logger.info("mobileConfig:" + xml);
+
+        try {
+            out.flush();
+        } finally {
+            out.close();
+        }
+        return null;
+    }
+
+    @RequestMapping("/receiveIosData")
+    public void receiveIosData(HttpServletRequest request) throws Exception {
+        InputStream is = request.getInputStream();
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document document = db.parse(is);
+        NodeList dict = document.getElementsByTagName("dict");
+        Node item = dict.item(0);
+
+        NodeList childNodes = item.getChildNodes();
+
+        for (int i=0;i<childNodes.getLength();i++) {
+            Node node = childNodes.item(i);
+            logger.info(node.getNodeName() + " : " + node.getNodeValue());
+            if (node.getNodeValue().equalsIgnoreCase("UDID")) {
+                logger.info("UDID:" + node.getNextSibling().getNodeValue());
+                break;
+            }
+        }
     }
 
     @RequestMapping(value = "/downloadTpl", method = RequestMethod.GET)
