@@ -17,6 +17,7 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.app.VelocityEngine;
@@ -35,6 +36,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -234,7 +236,9 @@ public class ResourceController {
     @RequestMapping("/reportUuid")
     public void reportUuid(@RequestParam String uuid) {
         try {
-            staffService.insertIosUuid(uuid);
+            if (StringUtils.hasText(uuid)) {
+                staffService.insertIosUuid(uuid);
+            }
         } catch (Exception e) {
             logger.error("reportUuid：", e);
         }
@@ -261,12 +265,14 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
+    public Map<String, Object> uploadFile(@RequestParam("file") MultipartFile file, Model model) {
+        Map<String, Object> map = new HashMap<>();
         Result result = null;
+        int count = 0;
         try {
             if (!file.isEmpty()) {
                 if (!FilenameUtils.isExtension(file.getOriginalFilename(), "xlsx")
-                        || !FilenameUtils.isExtension(file.getOriginalFilename(), "xls")) {
+                        && !FilenameUtils.isExtension(file.getOriginalFilename(), "xls")) {
                     throw new RuntimeException("仅支持.xlsx和.xls文件");
                 }
 
@@ -277,8 +283,12 @@ public class ResourceController {
                 }
                 File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
                 file.transferTo(serverFile);
+
                 logger.info("You successfully uploaded file=" +  file.getOriginalFilename());
                 List<String[]> strings = ExcelUtil.readFromFile(serverFile, 14, 1000);
+
+                List<Staff> staffList = Lists.newArrayList();
+
                 for (int i=1;i<strings.size();i++) {
                     String[] string = strings.get(i);
                     Staff staff = new Staff();
@@ -315,23 +325,32 @@ public class ResourceController {
                         staff.setPid(project.getId());
                     }
 
+                    staffList.add(staff);
+                }
+
+                for (Staff staff : staffList) {
                     try {
                         staffService.addStaff(staff);
                     } catch (DataIntegrityViolationException e) {
-                        logger.error("已存在：" + Arrays.toString(string));
+                        logger.error("已存在：" + staff.getEmail());
+                        continue;
                     }
+                    count ++;
                 }
 
                 serverFile.deleteOnExit();
             } else {
                 logger.error("You failed to upload " +  file.getOriginalFilename() + " because the file was empty.");
             }
+            result = Result.successResult();
+            result.setMsg("上传成功：" + count + "条");
         } catch (Exception e) {
             logger.error("上传失败：{}", e.getMessage(), e);
-            result = Result.errorResult(e.getMessage());
+            result = Result.errorResult("错误：" + e.getMessage());
         }
 
-        return "index";
+        convertToMap(result, map);
+        return map;
     }
 
     @RequestMapping("/index")
@@ -358,5 +377,16 @@ public class ResourceController {
         }
 
         return result;
+    }
+
+    private void convertToMap(Result result, Map<String, Object> map) {
+        if (result == null || map == null) {
+            return;
+        }
+        if (result.isSuccess()) {
+            map.put("response", result.getMsg());
+        } else {
+            map.put("error", result.getMsg());
+        }
     }
 }

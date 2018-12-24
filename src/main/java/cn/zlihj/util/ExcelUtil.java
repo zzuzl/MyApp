@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -135,7 +136,9 @@ public class ExcelUtil {
 				if (cell != null) {
 					switch (cell.getCellType()) {
 					case HSSFCell.CELL_TYPE_NUMERIC: // 数字
-						tmp = cell.getNumericCellValue();
+						NumberFormat numberFormat = NumberFormat.getInstance();
+						numberFormat.setGroupingUsed(false);
+						tmp = numberFormat.format(cell.getNumericCellValue());
 						break;
 					case HSSFCell.CELL_TYPE_STRING: // 字符串
 						tmp = cell.getStringCellValue();

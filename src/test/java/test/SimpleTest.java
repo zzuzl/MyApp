@@ -4,6 +4,8 @@ import cn.zlihj.domain.Staff;
 import cn.zlihj.enums.WorkType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -11,21 +13,15 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.junit.Test;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
 import java.util.Iterator;
 
 public class SimpleTest {
@@ -48,7 +44,7 @@ public class SimpleTest {
     public void testLucene() throws Exception {
         String[] arr = new String[]{"daf wadf", "had哈"};
         createIndex(arr);
-        search("daf");
+        search("a");
     }
 
     private void createIndex(String[] arr) throws Exception {
@@ -71,7 +67,8 @@ public class SimpleTest {
         FSDirectory directory = FSDirectory.open(Paths.get("/Users/zhanglei53/index"));
         IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(directory));
 
-        TermQuery query = new TermQuery(new Term("name", queryString));
+        QueryParser queryParser = new QueryParser("name", new StandardAnalyzer());
+        Query query = queryParser.parse(queryString);
         TopDocs topDocs = indexSearcher.search(query, 10);
         System.out.println(topDocs.scoreDocs.length);
         for (ScoreDoc doc : topDocs.scoreDocs) {
@@ -79,6 +76,15 @@ public class SimpleTest {
             System.out.println(hit.getField("name").stringValue());
         }
         directory.close();
+    }
+
+    @Test
+    public void testNumberFormat() {
+        double d = 1.8810151676E10;
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setGroupingUsed(false);
+        System.out.println(d);
+        System.out.println(numberFormat.format(d));
     }
 
     public static void main(String[] args) throws Exception {

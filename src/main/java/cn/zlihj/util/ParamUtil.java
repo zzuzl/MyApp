@@ -55,6 +55,10 @@ public final class ParamUtil {
         }
     }
 
+    public static void main(String[] args) {
+        parseToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI0MTQ3NDY0NzFAcXEuY29tIiwiZXhwIjoxNTQ1MDEzODU3fQ.9DU2iuSwf5xvTF7TZUn46BDqkTx_oNOJwIgTgzdzE50");
+    }
+
     public static String createToken(String text, int minutes) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(APP);

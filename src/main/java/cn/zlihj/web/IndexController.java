@@ -66,7 +66,7 @@ public class IndexController {
         VersionInfo maxVersion = staffService.findMaxVersion();
         result.setData(maxVersion);
 
-        logger.info("uuid:" + uuid);
+        // logger.info("uuid:" + uuid);
 
         /*if (StringUtils.hasText(uuid) && staffService.findUuid(uuid) != null) {
 

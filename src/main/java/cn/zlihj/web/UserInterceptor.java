@@ -39,7 +39,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         try {
             user = ParamUtil.parseToken(token);
         } catch (Exception e) {
-            logger.error("token error:{}", token);
+            logger.error("token error:{}", token, e);
             success = false;
         }
         Staff staff = staffService.findByEmail(user);
