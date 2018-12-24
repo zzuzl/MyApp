@@ -187,7 +187,9 @@ public class StaffController {
             String extension = FilenameUtils.getExtension(file.getOriginalFilename());
             Assert.isTrue(isPhoto(extension), "文件格式错误");
 
-            Assert.isTrue(file.getSize() > 10240000, "图片超过10M");
+            logger.info(file.getOriginalFilename() + ",size:" + file.getSize());
+
+            Assert.isTrue(file.getSize() < 10240000, "图片超过10M");
 
             String rootPath = "/tmp";
             File dir = new File(rootPath + File.separator + "tmpAvatars");
