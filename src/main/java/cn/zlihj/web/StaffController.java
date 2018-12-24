@@ -10,18 +10,36 @@ import cn.zlihj.service.ProjectService;
 import cn.zlihj.service.StaffService;
 import cn.zlihj.util.LoginContext;
 import cn.zlihj.util.ParamUtil;
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicCOSCredentials;
+import com.qcloud.cos.auth.COSCredentials;
+import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.region.Region;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Map;
 
 @RequestMapping("/staff")
 @Controller
 public class StaffController {
     private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String[] EXTENSIONS = new String[]{
+            "jpg", "jpeg", "png"
+    };
 
     @Autowired
     private StaffService staffService;
@@ -159,5 +177,74 @@ public class StaffController {
             result = Result.errorResult(e.getMessage());
         }
         return result;
+    }
+
+    @RequestMapping(value = "/uploadAvatar", method = RequestMethod.POST)
+    @ResponseBody
+    public Result uploadFile(@RequestParam("file") MultipartFile file) {
+        Result result = null;
+        try {
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            Assert.isTrue(isPhoto(extension), "文件格式错误");
+
+            Assert.isTrue(file.getSize() > 10240000, "图片超过10M");
+
+            String rootPath = "/tmp";
+            File dir = new File(rootPath + File.separator + "tmpAvatars");
+            if (!dir.exists()) {
+                Assert.isTrue(dir.mkdirs(), "文件夹创建失败");
+            }
+            File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
+            file.transferTo(serverFile);
+
+            BufferedImage bufImage = ImageIO.read(serverFile);
+            int width = bufImage.getWidth();
+            int height = bufImage.getHeight();
+            int w = width;
+            int x=0, y=0;
+            if (width > height) {
+                x += (width - height) / 2;
+                w = height;
+            } else if (width < height) {
+                y += (height - width) / 2;
+                w = width;
+            }
+            BufferedImage subimage = bufImage.getSubimage(x, y, w, w);
+            ImageIO.write(subimage, "jpg", serverFile);
+
+            // 上传到COS
+            COSCredentials cred = new BasicCOSCredentials("AKIDIQNCnEdaYTGD7OSUIVXO6e4JQNchpMzs", "uhKwMbheR3BtZ4NZiieS7jAPVWM1qbDg");
+            ClientConfig clientConfig = new ClientConfig(new Region("ap-beijing"));
+            COSClient cosclient = new COSClient(cred, clientConfig);
+
+            String key = "avatars/" + ParamUtil.md5(file.getOriginalFilename()) + ".jpeg";
+            PutObjectRequest putObjectRequest = new PutObjectRequest("zlihj-zpk-1251746773", key, serverFile);
+            cosclient.putObject(putObjectRequest);
+            cosclient.shutdown();
+
+            serverFile.deleteOnExit();
+
+            // 更新字段
+            String avatar = "https://zlihj-zpk-1251746773.cos.ap-beijing.myqcloud.com/" + key;
+            staffService.updateAvatar(LoginContext.currentUser().getId(), avatar);
+
+            result = Result.successResult();
+            result.setMsg(avatar);
+        } catch (Exception e) {
+            logger.error("uploadFile error:", e);
+            result = Result.errorResult(e.getMessage());
+        }
+
+        return result;
+    }
+
+    private boolean isPhoto(String extension) {
+        for (String s : EXTENSIONS) {
+            if (s.equalsIgnoreCase(extension)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

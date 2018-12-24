@@ -48,4 +48,7 @@ public interface StaffDao {
 
     int resetPwd(@Param("email") String email,
                  @Param("pwd") String pwd);
+
+    int updateAvatar(@Param("id") long id,
+                     @Param("avatar") String avatar);
 }

@@ -37,6 +37,7 @@ public class Staff {
     private String email;
     private String wx;
     private String workAddress;
+    private String avatar;
     private String password;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date createTime;
@@ -193,5 +194,13 @@ public class Staff {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

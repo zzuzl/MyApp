@@ -153,4 +153,8 @@ public class StaffService {
     public String findUuid(String uuid) {
         return staffDao.findUuid(uuid);
     }
+
+    public boolean updateAvatar(long id, String avatar) {
+        return staffDao.updateAvatar(id, avatar) == 1;
+    }
 }

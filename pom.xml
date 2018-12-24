@@ -137,6 +137,10 @@
                   <groupId>dom4j</groupId>
                   <artifactId>dom4j</artifactId>
               </exclusion>
+              <exclusion>
+                  <groupId>commons-codec</groupId>
+                  <artifactId>commons-codec</artifactId>
+              </exclusion>
           </exclusions>
       </dependency>
       <dependency>
@@ -240,6 +244,18 @@
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
           <version>18.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>net.coobird</groupId>
+          <artifactId>thumbnailator</artifactId>
+          <version>0.4.8</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.qcloud</groupId>
+          <artifactId>cos_api</artifactId>
+          <version>5.4.10</version>
       </dependency>
 
       <dependency>

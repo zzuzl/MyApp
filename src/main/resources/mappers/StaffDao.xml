@@ -151,4 +151,8 @@
     <update id="resetPwd">
         update staff set password=#{pwd}, updateTime=now() where email=#{email}
     </update>
+
+    <update id="updateAvatar">
+        update staff set avatar=#{avatar}, updateTime=now() where id=#{id}
+    </update>
 </mapper>
