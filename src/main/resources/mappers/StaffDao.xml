@@ -20,6 +20,7 @@
         email,
         wx,
         workAddress,
+        avatar,
         password
     </sql>
 
