@@ -52,8 +52,10 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
             LoginContext.setUser(staff);
             response.addHeader("token", ParamUtil.createToken(staff.getEmail()));
         } else {
+            Result result = Result.errorResult("未登录或登录凭证错误，请重新登录");
+            result.setData(401);
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.getWriter().write(new ObjectMapper().writeValueAsString(Result.errorResult("未登录或登录凭证错误，请重新登录")));
+            response.getWriter().write(new ObjectMapper().writeValueAsString(result));
             return false;
         }
 
