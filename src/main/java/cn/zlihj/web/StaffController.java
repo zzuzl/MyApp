@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/staff")
@@ -98,6 +99,7 @@ public class StaffController {
 
     @RequestMapping(value = "/move", method = RequestMethod.POST)
     @ResponseBody
+    @Authorization(key = Authorization.STAFF_MOVE)
     public Result move(@RequestParam int source, @RequestParam Integer pid,
                        @RequestParam int oldSource, @RequestParam Integer oldPid, @RequestParam Long id) {
         Result result = Result.successResult();
@@ -138,6 +140,7 @@ public class StaffController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
+    @Authorization(key = Authorization.STAFF_LIST)
     public ListResult<Staff> list(@RequestParam("page") Integer page, String key) {
         ListResult<Staff> result = null;
         try {
@@ -161,6 +164,20 @@ public class StaffController {
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/permissions", method = RequestMethod.GET)
+    @ResponseBody
+    public ListResult<String> permissions() {
+        ListResult<String> result = null;
+        try {
+            List<String> permissions = staffService.permissions(LoginContext.currentUser().getEmail());
+            result = ListResult.successList(permissions);
+        } catch (Exception e) {
+            logger.error("获取权限失败：{}", e.getMessage(), e);
+            result = ListResult.errorList(e.getMessage());
         }
         return result;
     }

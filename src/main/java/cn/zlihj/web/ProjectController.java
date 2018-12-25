@@ -55,6 +55,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
+    @Authorization(key = Authorization.PROJECT_SAVE)
     public Result save(@RequestBody Project project) {
         Result result = null;
         try {

@@ -1,6 +1,7 @@
 package cn.zlihj.service;
 
 import cn.zlihj.dao.CompanyDao;
+import cn.zlihj.dao.PermissionDao;
 import cn.zlihj.dao.ProjectDao;
 import cn.zlihj.dao.StaffDao;
 import cn.zlihj.domain.*;
@@ -36,6 +37,8 @@ public class StaffService {
     private CompanyDao companyDao;
     @Autowired
     private ProjectDao projectDao;
+    @Autowired
+    private PermissionDao permissionDao;
 
     public Staff login(String email, String password) {
         Staff staff = staffDao.findByEmail(email);
@@ -156,5 +159,22 @@ public class StaffService {
 
     public boolean updateAvatar(long id, String avatar) {
         return staffDao.updateAvatar(id, avatar) == 1;
+    }
+
+    public List<String> permissions(String email) {
+        return permissionDao.listPermissions(email);
+    }
+
+    public boolean hasPermission(String permission, String email) {
+        List<String> list = permissions(email);
+        if (list != null) {
+            for (String key : list) {
+                if (key.equals(permission)) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
     }
 }

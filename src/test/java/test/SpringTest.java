@@ -1,5 +1,6 @@
 package test;
 
+import cn.zlihj.dao.PermissionDao;
 import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Project;
 import cn.zlihj.domain.Staff;
@@ -16,6 +17,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/spring-config.xml")
 public class SpringTest {
@@ -27,6 +30,8 @@ public class SpringTest {
     private StaffService staffService;
     @Autowired
     private JavaMailSenderImpl javaMailSender;
+    @Autowired
+    private PermissionDao permissionDao;
 
     @Test
     public void testInsert() {
@@ -96,5 +101,11 @@ public class SpringTest {
         message.setSubject("重置密码");
         message.setText("重置密码");
         javaMailSender.send(message);
+    }
+
+    @Test
+    public void testPermission() {
+        List<String> list = permissionDao.listPermissions("672399171@qq.com");
+        System.out.println(list);
     }
 }

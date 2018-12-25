@@ -54,6 +54,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
+    @Authorization(key = Authorization.COMPANY_SAVE)
     public Result save(@RequestBody Company company) {
         Result result = null;
         try {

@@ -49,10 +49,19 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (success) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Authorization annotation = handlerMethod.getMethodAnnotation(Authorization.class);
+            if (annotation != null && !staffService.hasPermission(annotation.key(), user)) {
+                success = false;
+            }
+        }
+
+
+        if (success) {
             LoginContext.setUser(staff);
             response.addHeader("token", ParamUtil.createToken(staff.getEmail()));
         } else {
-            Result result = Result.errorResult("未登录或登录凭证错误，请重新登录");
+            Result result = Result.errorResult("未登录或或权限不足");
             result.setData(401);
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
