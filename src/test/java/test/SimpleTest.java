@@ -16,6 +16,8 @@ import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+import net.coobird.thumbnailator.geometry.Size;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -138,6 +140,17 @@ public class SimpleTest {
         }
         BufferedImage subimage = bufImage.getSubimage(x, y, w, w);
         ImageIO.write(subimage, "jpg", new File("/Users/zhanglei53/Desktop/1.jpg"));
+    }
+
+    @Test
+    public void testThumb() throws IOException {
+        String path = "/Users/zhanglei53/Desktop/WechatIMG6.jpeg";
+        BufferedImage bufImage = ImageIO.read(new File(path));
+        int w = Math.min(bufImage.getWidth(), bufImage.getHeight());
+        Thumbnails.of(path)
+                .sourceRegion(Positions.CENTER, w, w)
+                .size(300, 300)
+                .toFile("/Users/zhanglei53/Desktop/1.jpg");
     }
 
     @Test

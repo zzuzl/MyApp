@@ -17,6 +17,8 @@ import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,20 +201,13 @@ public class StaffController {
             File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
             file.transferTo(serverFile);
 
+            // 裁剪缩放
             BufferedImage bufImage = ImageIO.read(serverFile);
-            int width = bufImage.getWidth();
-            int height = bufImage.getHeight();
-            int w = width;
-            int x=0, y=0;
-            if (width > height) {
-                x += (width - height) / 2;
-                w = height;
-            } else if (width < height) {
-                y += (height - width) / 2;
-                w = width;
-            }
-            BufferedImage subimage = bufImage.getSubimage(x, y, w, w);
-            ImageIO.write(subimage, "jpg", serverFile);
+            int w = Math.min(bufImage.getWidth(), bufImage.getHeight());
+            Thumbnails.of(serverFile)
+                    .sourceRegion(Positions.CENTER, w, w)
+                    .size(300, 300)
+                    .toFile(serverFile.getAbsolutePath());
 
             // 上传到COS
             COSCredentials cred = new BasicCOSCredentials("AKIDIQNCnEdaYTGD7OSUIVXO6e4JQNchpMzs", "uhKwMbheR3BtZ4NZiieS7jAPVWM1qbDg");
