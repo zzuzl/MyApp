@@ -1,5 +1,6 @@
 package cn.zlihj.util;
 
+import cn.zlihj.domain.Checkable;
 import cn.zlihj.domain.Staff;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -75,6 +76,9 @@ public final class ParamUtil {
         Assert.notNull(checkable, "参数为空");
         for (ConstraintViolation c : validator.validate(checkable)) {
             throw new RuntimeException(c.getPropertyPath().toString() + ":" + c.getMessage());
+        }
+        if (checkable instanceof Checkable) {
+            ((Checkable) checkable).checkAttribute();
         }
     }
 

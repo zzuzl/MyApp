@@ -269,6 +269,7 @@ public class ResourceController {
         Map<String, Object> map = new HashMap<>();
         Result result = null;
         int count = 0;
+        int i=1;
         try {
             if (!file.isEmpty()) {
                 if (!FilenameUtils.isExtension(file.getOriginalFilename(), "xlsx")
@@ -289,7 +290,7 @@ public class ResourceController {
 
                 List<Staff> staffList = Lists.newArrayList();
 
-                for (int i=1;i<strings.size();i++) {
+                for (i=1;i<strings.size();i++) {
                     String[] string = strings.get(i);
                     Staff staff = new Staff();
                     staff.setName(string[0]);
@@ -324,6 +325,7 @@ public class ResourceController {
                         Assert.notNull(project, "对应项目不存在,行号：" + i);
                         staff.setPid(project.getId());
                     }
+                    ParamUtil.checkBean(staff);
 
                     staffList.add(staff);
                 }
@@ -345,8 +347,8 @@ public class ResourceController {
             result = Result.successResult();
             result.setMsg("上传成功：" + count + "条");
         } catch (Exception e) {
-            logger.error("上传失败：{}", e.getMessage(), e);
-            result = Result.errorResult("错误：" + e.getMessage());
+            logger.error("行号：" + i + "上传失败：{}", e.getMessage(), e);
+            result = Result.errorResult("行号：" + i + ",错误：" + e.getMessage());
         }
 
         convertToMap(result, map);

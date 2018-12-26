@@ -5,12 +5,16 @@ import cn.zlihj.enums.Source;
 import cn.zlihj.enums.WorkType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang.math.NumberUtils;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Staff {
+public class Staff implements Checkable {
     private Long id;
     @NotNull
     @Length(max = 10)
@@ -202,5 +206,33 @@ public class Staff {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public void checkAttribute() {
+        if (StringUtils.hasText(name)) {
+            Assert.isTrue(!StringUtils.containsWhitespace(name), "姓名包含空白字符");
+        }
+
+        if (StringUtils.hasText(phone)) {
+            Assert.isTrue(NumberUtils.isDigits(phone), "手机号必须为数字");
+            Assert.isTrue(phone.length() == 11, "手机号必须为11位，固定电话请加上区号");
+        }
+
+        if (StringUtils.hasText(qq)) {
+            Assert.isTrue(NumberUtils.isDigits(qq), "QQ必须为数字");
+        }
+
+        if (StringUtils.hasText(wx)) {
+            Assert.isTrue(!StringUtils.containsWhitespace(wx), "微信号包含空白字符");
+        }
+
+        if (StringUtils.hasText(gxtAccount)) {
+            Assert.isTrue(!StringUtils.containsWhitespace(gxtAccount), "广讯通包含空白字符");
+        }
+
+        if (StringUtils.hasText(email)) {
+            Assert.isTrue(!StringUtils.containsWhitespace(email), "邮箱包含空白字符");
+        }
     }
 }

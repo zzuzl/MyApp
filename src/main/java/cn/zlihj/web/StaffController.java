@@ -89,6 +89,7 @@ public class StaffController {
     public Result updateInfo(@RequestBody Staff staff) {
         Result result = Result.successResult();
         try {
+            staff.checkAttribute();
             staffService.updateInfo(staff);
         } catch (Exception e) {
             logger.error("修改失败：{}", e.getMessage(), e);
