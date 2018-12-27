@@ -94,7 +94,7 @@
         <if test="type != null">
             and type=#{type}
         </if>
-        order by id
+        order by CONVERT(name USING gbk) asc
         limit ${from},${size}
     </select>
 

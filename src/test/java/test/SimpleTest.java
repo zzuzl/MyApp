@@ -64,7 +64,7 @@ public class SimpleTest {
     public void testLucene() throws Exception {
         String[] arr = new String[]{"daf wadf", "had哈"};
         createIndex(arr);
-        search("a");
+        search("had哈");
     }
 
     private void createIndex(String[] arr) throws Exception {
@@ -87,8 +87,7 @@ public class SimpleTest {
         FSDirectory directory = FSDirectory.open(Paths.get("/Users/zhanglei53/index"));
         IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(directory));
 
-        QueryParser queryParser = new QueryParser("name", new StandardAnalyzer());
-        Query query = queryParser.parse(queryString);
+        TermQuery query = new TermQuery(new Term("name", queryString));
         TopDocs topDocs = indexSearcher.search(query, 10);
         System.out.println(topDocs.scoreDocs.length);
         for (ScoreDoc doc : topDocs.scoreDocs) {

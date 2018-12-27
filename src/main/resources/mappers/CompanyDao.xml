@@ -33,6 +33,7 @@
     <select id="list" resultType="cn.zlihj.domain.Company">
         select * from company
         where pid=#{pid}
+        order by CONVERT(name USING gbk) asc
         limit 5000
     </select>
 
