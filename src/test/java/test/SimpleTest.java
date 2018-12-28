@@ -20,27 +20,26 @@ import net.coobird.thumbnailator.geometry.Positions;
 import net.coobird.thumbnailator.geometry.Size;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.junit.Test;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.Iterator;
 
@@ -62,14 +61,19 @@ public class SimpleTest {
 
     @Test
     public void testLucene() throws Exception {
-        String[] arr = new String[]{"daf wadf", "had哈"};
+        String[] arr = new String[]{"zl张磊", "张泽", "刘传"};
         createIndex(arr);
-        search("had哈");
+        // search("had哈");
+    }
+
+    @Test
+    public void testSearch() throws Exception {
+        search("z");
     }
 
     private void createIndex(String[] arr) throws Exception {
-        FSDirectory directory = FSDirectory.open(Paths.get("/Users/zhanglei53/index"));
-        IndexWriterConfig config = new IndexWriterConfig();
+        FSDirectory directory = FSDirectory.open(new File("/Users/zhanglei53/index"));
+        IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_4_10_2, new IKAnalyzer());
         IndexWriter indexWriter = new IndexWriter(directory, config);
 
         Document document = null;
@@ -84,11 +88,13 @@ public class SimpleTest {
     }
 
     private void search(String queryString) throws Exception {
-        FSDirectory directory = FSDirectory.open(Paths.get("/Users/zhanglei53/index"));
-        IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(directory));
+        FSDirectory directory = FSDirectory.open(new File("/Users/zhanglei53/index"));
+        DirectoryReader ireader = DirectoryReader.open(directory);
+        IndexSearcher indexSearcher = new IndexSearcher(ireader);
+        QueryParser parser = new QueryParser(Version.LUCENE_4_10_2, "name", new IKAnalyzer());
+        Query query = parser.parse(queryString);
 
-        TermQuery query = new TermQuery(new Term("name", queryString));
-        TopDocs topDocs = indexSearcher.search(query, 10);
+        TopDocs topDocs = indexSearcher.search(query, 50);
         System.out.println(topDocs.scoreDocs.length);
         for (ScoreDoc doc : topDocs.scoreDocs) {
             Document hit = indexSearcher.doc(doc.doc);

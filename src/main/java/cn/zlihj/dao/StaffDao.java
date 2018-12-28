@@ -32,6 +32,8 @@ public interface StaffDao {
 
     int updateInfo(Staff staff);
 
+    int modifyInfo(Staff staff);
+
     int moveStaff(@Param("source") int source,
                   @Param("pid") Integer pid,
                   @Param("oldSource") int oldSource,

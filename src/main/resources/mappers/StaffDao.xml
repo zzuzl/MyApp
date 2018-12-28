@@ -117,11 +117,37 @@
         update staff set password=#{newPassword}, updateTime=now() where email=#{email} and password=#{newPassword}
     </update>
 
+    <update id="modifyInfo" parameterType="cn.zlihj.domain.Staff">
+        update staff
+        set
+        name=#{name},
+        email=#{email},
+        gender=#{gender},
+        source=#{source},
+        pid=#{pid},
+        type=#{type},
+        birthday=#{birthday},
+        qq=#{qq},
+        wx=#{wx},
+        workAddress=#{workAddress},
+        school=#{school},
+        major=#{major},
+        gxtAccount=#{gxtAccount},
+        phone=#{phone},
+        updateTime=now()
+        where id=#{id}
+    </update>
+
     <update id="updateInfo" parameterType="cn.zlihj.domain.Staff">
         update staff
         set qq=#{qq},
+        wx=#{wx},
+        workAddress=#{workAddress},
+        school=#{school},
+        major=#{major},
         gxtAccount=#{gxtAccount},
-        phone=#{phone}
+        phone=#{phone},
+        updateTime=now()
         where email=#{email}
     </update>
 
