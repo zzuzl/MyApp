@@ -132,7 +132,7 @@ public class StaffService {
         if(staff.getId() == null) {
             addStaff(staff);
         } else {
-            updateInfo(staff);
+            staffDao.modifyInfo(staff);
         }
     }
 
