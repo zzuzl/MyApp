@@ -145,6 +145,7 @@ public class StaffController {
     public ListResult<Staff> list(@RequestParam("page") Integer page, String key) {
         ListResult<Staff> result = null;
         try {
+            logger.info("staffList:" + key);
             result = staffService.pageList(page, 50, null, null, null, key);
         } catch (Exception e) {
             logger.error("查询失败：{}", e.getMessage(), e);
