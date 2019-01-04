@@ -37,4 +37,8 @@
         limit 5000
     </select>
 
+    <delete id="del">
+        delete from project where id=#{id}
+    </delete>
+
 </mapper>

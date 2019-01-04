@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +65,28 @@ public class ProjectController {
             result = Result.successResult();
         } catch (Exception e) {
             logger.error("保存失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @ResponseBody
+    @Authorization(key = Authorization.PROJECT_SAVE)
+    public Result del(@RequestParam Integer id) {
+        Result result = null;
+        try {
+            Project project = projectService.findById(id);
+            Assert.notNull(project, "该项目不存在");
+
+            int staffCount = projectService.staffCount(id);
+            Assert.isTrue(staffCount <= 0, "该项目下还有" + staffCount + "个人，请移动人员后再删除！");
+
+
+            projectService.del(id);
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("删除失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
         }
         return result;

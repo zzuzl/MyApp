@@ -14,4 +14,6 @@ public interface ProjectDao {
     Project findByName(String name);
 
     List<Project> list(Integer pid);
+
+    void del(Integer id);
 }
