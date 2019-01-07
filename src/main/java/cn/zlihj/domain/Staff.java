@@ -35,7 +35,6 @@ public class Staff implements Checkable {
     @NotNull
     private String phone;
     private String qq;
-    @NotNull
     private String gxtAccount;
     @NotNull
     private String email;
