@@ -53,4 +53,6 @@ public interface StaffDao {
 
     int updateAvatar(@Param("id") long id,
                      @Param("avatar") String avatar);
+
+    void del(@Param("id") Long id);
 }

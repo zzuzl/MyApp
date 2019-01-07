@@ -177,4 +177,8 @@ public class StaffService {
         }
         return false;
     }
+
+    public void del(Long id) {
+        staffDao.del(id);
+    }
 }

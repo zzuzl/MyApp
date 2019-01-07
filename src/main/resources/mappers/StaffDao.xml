@@ -182,4 +182,8 @@
     <update id="updateAvatar">
         update staff set avatar=#{avatar}, updateTime=now() where id=#{id}
     </update>
+
+    <delete id="del">
+        delete from staff where id=#{id}
+    </delete>
 </mapper>

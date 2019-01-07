@@ -200,6 +200,24 @@ public class StaffController {
         return result;
     }
 
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @ResponseBody
+    @Authorization(key = Authorization.STAFF_DEL)
+    public Result del(@RequestParam Long id) {
+        Result result = null;
+        try {
+            logger.info(LoginContext.currentUser().getEmail() + ",删除用户：" + id);
+            Assert.notNull(id, "参数错误");
+            Assert.notNull(staffService.findById(id), "该人员不存在");
+            staffService.del(id);
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("删除失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/uploadAvatar", method = RequestMethod.POST)
     @ResponseBody
     public Result uploadFile(@RequestParam("file") MultipartFile file) {
