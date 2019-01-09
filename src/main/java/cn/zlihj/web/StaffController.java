@@ -251,7 +251,7 @@ public class StaffController {
             ClientConfig clientConfig = new ClientConfig(new Region("ap-beijing"));
             COSClient cosclient = new COSClient(cred, clientConfig);
 
-            String key = "avatars/" + ParamUtil.md5(file.getOriginalFilename()) + ".jpeg";
+            String key = "avatars/" + LoginContext.currentUser().getEmail() + ".jpeg";
             PutObjectRequest putObjectRequest = new PutObjectRequest("zlihj-zpk-1251746773", key, serverFile);
             cosclient.putObject(putObjectRequest);
             cosclient.shutdown();
