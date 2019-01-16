@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zlihj.dao.ResumeDao">
+
+    <insert id="insert" parameterType="cn.zlihj.domain.Resume" keyProperty="id" useGeneratedKeys="true">
+        insert into resume(
+            staffId,
+            content,
+            createTime,
+            updateTime
+        ) values(
+            #{staffId},
+            #{content},
+            now(),
+            now()
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.zlihj.domain.Company">
+        update resume set content=#{content}, updateTime=now() where id=#{id}
+    </update>
+
+    <delete id="del">
+        delete from resume where id=#{id}
+    </delete>
+
+    <select id="listByStaff" resultType="cn.zlihj.domain.Resume">
+        select * from resume
+        where staffId=#{staffId}
+        order by createTime asc
+        limit 5000
+    </select>
+
+</mapper>

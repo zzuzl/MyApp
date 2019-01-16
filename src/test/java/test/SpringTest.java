@@ -3,11 +3,13 @@ package test;
 import cn.zlihj.dao.PermissionDao;
 import cn.zlihj.domain.Company;
 import cn.zlihj.domain.Project;
+import cn.zlihj.domain.Resume;
 import cn.zlihj.domain.Staff;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.enums.WorkType;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.ProjectService;
+import cn.zlihj.service.ResumeService;
 import cn.zlihj.service.StaffService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +34,8 @@ public class SpringTest {
     private JavaMailSenderImpl javaMailSender;
     @Autowired
     private PermissionDao permissionDao;
+    @Autowired
+    private ResumeService resumeService;
 
     @Test
     public void testInsert() {
@@ -107,5 +111,15 @@ public class SpringTest {
     public void testPermission() {
         List<String> list = permissionDao.listPermissions("672399171@qq.com");
         System.out.println(list);
+    }
+
+    @Test
+    public void testResume() {
+        Resume resume = new Resume();
+        resume.setStaffId(1L);
+        resume.setContent("dawdawda");
+        // resumeService.save(resume);
+        System.out.println(resumeService.listByStaff(1L));
+        resumeService.del(1L);
     }
 }

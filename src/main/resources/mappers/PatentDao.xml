@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zlihj.dao.PatentDao">
+
+    <insert id="insert" parameterType="cn.zlihj.domain.Patent" keyProperty="id" useGeneratedKeys="true">
+        insert into patent(
+            title,
+            subTitle,
+            content,
+            postTime,
+            createTime,
+            updateTime
+        ) values(
+            #{title},
+            #{subTitle},
+            #{content},
+            #{postTime},
+            now(),
+            now()
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.zlihj.domain.Patent">
+        update patent set title=#{title},subTitle=#{subTitle},postTime=#{postTime},content=#{content}, updateTime=now() where id=#{id}
+    </update>
+
+    <delete id="del">
+        delete from patent where id=#{id}
+    </delete>
+
+    <select id="pageList" resultType="cn.zlihj.domain.Patent">
+        select * from patent
+        order by postTime asc
+        limit ${from},${size}
+    </select>
+
+</mapper>
