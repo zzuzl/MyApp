@@ -13,5 +13,6 @@ public @interface Authorization {
     String STAFF_LIST = "STAFF_LIST";
     String COMPANY_SAVE = "COMPANY_SAVE";
     String PROJECT_SAVE = "PROJECT_SAVE";
+    String RESUME_DEL = "RESUME_DEL";
     String key();
 }
