@@ -42,10 +42,12 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
             logger.error("token error:{}", token, e);
             success = false;
         }
-        Staff staff = staffService.findByEmail(user);
-
-        if (staff == null) {
-            success = false;
+        Staff staff = null;
+        if (success) {
+            staff = staffService.findByEmail(user);
+            if (staff == null) {
+                success = false;
+            }
         }
 
         if (success) {

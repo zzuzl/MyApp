@@ -14,5 +14,6 @@ public @interface Authorization {
     String COMPANY_SAVE = "COMPANY_SAVE";
     String PROJECT_SAVE = "PROJECT_SAVE";
     String RESUME_DEL = "RESUME_DEL";
+    String PATENT_DEL = "PATENT_DEL";
     String key();
 }

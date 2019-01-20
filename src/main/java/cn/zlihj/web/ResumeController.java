@@ -48,11 +48,17 @@ public class ResumeController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(@RequestBody Resume resume) {
+    public Result save(@RequestBody List<Resume> resumes) {
         Result result = null;
         try {
-            ParamUtil.checkBean(resume);
-            resumeService.save(resume);
+            Assert.notEmpty(resumes, "内容为空");
+            for (Resume resume : resumes) {
+                ParamUtil.checkBean(resume);
+            }
+            for (Resume resume : resumes) {
+                resumeService.save(resume);
+            }
+
             result = Result.successResult();
         } catch (Exception e) {
             logger.error("保存简历失败：{}", e.getMessage(), e);

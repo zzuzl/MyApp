@@ -5,14 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Patent {
     private Integer id;
     @NotNull
+    private String url;
+    @NotNull
     private String title;
     private String subTitle;
-    @NotNull
+    private List<Long> authors;
     private String content;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date postTime;
@@ -20,6 +23,7 @@ public class Patent {
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date updateTime;
+    private List<Staff> staff;
 
     public Integer getId() {
         return id;
@@ -27,6 +31,14 @@ public class Patent {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getTitle() {
@@ -43,6 +55,14 @@ public class Patent {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
+    }
+
+    public List<Long> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Long> authors) {
+        this.authors = authors;
     }
 
     public String getContent() {
@@ -77,16 +97,11 @@ public class Patent {
         this.updateTime = updateTime;
     }
 
-    @Override
-    public String toString() {
-        return "Patent{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", subTitle='" + subTitle + '\'' +
-                ", content='" + content + '\'' +
-                ", postTime=" + postTime +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
+    public List<Staff> getStaff() {
+        return staff;
+    }
+
+    public void setStaff(List<Staff> staff) {
+        this.staff = staff;
     }
 }
