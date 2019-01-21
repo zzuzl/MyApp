@@ -4,6 +4,7 @@ import cn.zlihj.dao.PatentDao;
 import cn.zlihj.domain.Patent;
 import cn.zlihj.domain.StaffPatentVo;
 import cn.zlihj.dto.ListResult;
+import com.google.common.base.Splitter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +19,26 @@ public class PatentService {
 
     @Transactional(rollbackFor = Exception.class)
     public void save(Patent patent, List<StaffPatentVo> vos) {
+        Iterable<String> authors = Splitter.on(',')
+                .trimResults()
+                .omitEmptyStrings()
+                .split(patent.getAuthors());
+
         if (patent.getId() == null) {
             patentDao.insert(patent);
-
-            for (Long staffId : patent.getAuthors()) {
+            for (String staffId : authors) {
                 StaffPatentVo vo = new StaffPatentVo();
                 vo.setPatentId(patent.getId());
-                vo.setStaffId(staffId);
+                vo.setStaffId(Long.parseLong(staffId));
                 patentDao.insertMap(vo);
             }
         } else {
             Assert.isTrue(patentDao.update(patent) == 1, "专利不存在：" + patent.getId());
-            Iterator<Long> iterator = patent.getAuthors().iterator();
+            List<String> list = new ArrayList<>();
+            for (String author : authors) {
+                list.add(author);
+            }
+            Iterator<String> iterator = list.iterator();
 
             List<Long> ids = new ArrayList<>();
             Map<Long, StaffPatentVo> tmpMap = new HashMap<>();
@@ -39,18 +48,21 @@ public class PatentService {
             }
 
             while (iterator.hasNext()) {
-                Long id = iterator.next();
+                Long id = Long.parseLong(iterator.next());
                 if (ids.contains(id)) {
                     iterator.remove();
                     ids.remove(id);
                     tmpMap.remove(id);
                 }
             }
-            for (Long id : ids) {
-                patentDao.delMapById(tmpMap.get(id).getId());
-            }
             for (StaffPatentVo patentVo : tmpMap.values()) {
-                patentDao.insertMap(patentVo);
+                patentDao.delMapById(patentVo.getId());
+            }
+            for (String staffId : list) {
+                StaffPatentVo vo = new StaffPatentVo();
+                vo.setPatentId(patent.getId());
+                vo.setStaffId(Long.parseLong(staffId));
+                patentDao.insertMap(vo);
             }
         }
     }

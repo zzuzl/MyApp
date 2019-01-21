@@ -16,7 +16,7 @@ public interface PatentDao {
     List<Patent> pageList(@Param("from") int from,
                           @Param("size") int size);
 
-    int delMapById(Long id);
+    void delMapById(Long id);
 
     int count();
 

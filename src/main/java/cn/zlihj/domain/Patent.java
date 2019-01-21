@@ -15,9 +15,10 @@ public class Patent {
     @NotNull
     private String title;
     private String subTitle;
-    private List<Long> authors;
-    private String content;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
+    @NotNull
+    private String authors;
+    private String authorNames;
+    @JsonFormat(pattern = "yyyy-MM-dd", locale = "zh", timezone = "GMT+8")
     private Date postTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     private Date createTime;
@@ -57,20 +58,20 @@ public class Patent {
         this.subTitle = subTitle;
     }
 
-    public List<Long> getAuthors() {
+    public String getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Long> authors) {
+    public void setAuthors(String authors) {
         this.authors = authors;
     }
 
-    public String getContent() {
-        return content;
+    public String getAuthorNames() {
+        return authorNames;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setAuthorNames(String authorNames) {
+        this.authorNames = authorNames;
     }
 
     public Date getPostTime() {

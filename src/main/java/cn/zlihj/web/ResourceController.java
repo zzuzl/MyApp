@@ -18,6 +18,12 @@ import com.google.code.kaptcha.Producer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicCOSCredentials;
+import com.qcloud.cos.auth.COSCredentials;
+import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.region.Region;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.app.VelocityEngine;
@@ -242,6 +248,52 @@ public class ResourceController {
         } catch (Exception e) {
             logger.error("reportUuid：", e);
         }
+    }
+
+    @RequestMapping(value = "/uploadPatent", method = RequestMethod.POST)
+    @ResponseBody
+    public Result uploadPatent(@RequestParam("file") MultipartFile file) {
+        Result result = null;
+        try {
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            Assert.isTrue(isPdf(extension), "文件格式错误");
+
+            logger.info(file.getOriginalFilename() + ",size:" + file.getSize());
+
+            Assert.isTrue(file.getSize() < 5120000, "文件超过5M");
+
+            String rootPath = "/tmp";
+            File dir = new File(rootPath + File.separator + "tmpPatent");
+            if (!dir.exists()) {
+                Assert.isTrue(dir.mkdirs(), "文件夹创建失败");
+            }
+            File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
+            file.transferTo(serverFile);
+
+            // 上传到COS
+            COSCredentials cred = new BasicCOSCredentials("AKIDIQNCnEdaYTGD7OSUIVXO6e4JQNchpMzs", "uhKwMbheR3BtZ4NZiieS7jAPVWM1qbDg");
+            ClientConfig clientConfig = new ClientConfig(new Region("ap-beijing"));
+            COSClient cosclient = new COSClient(cred, clientConfig);
+
+            String key = "patent/" + (System.currentTimeMillis() / 1000) + "-" + file.getOriginalFilename();
+            PutObjectRequest putObjectRequest = new PutObjectRequest("zlihj-zpk-1251746773", key, serverFile);
+            cosclient.putObject(putObjectRequest);
+            cosclient.shutdown();
+
+            serverFile.deleteOnExit();
+            String url = "https://zlihj-zpk-1251746773.cos.ap-beijing.myqcloud.com/" + key;
+            result = Result.successResult();
+            result.setMsg(url);
+        } catch (Exception e) {
+            logger.error("uploadFile error:", e);
+            result = Result.errorResult(e.getMessage());
+        }
+
+        return result;
+    }
+
+    private boolean isPdf(String extension) {
+        return "pdf".equalsIgnoreCase(extension.toLowerCase());
     }
 
     @RequestMapping(value = "/downloadTpl", method = RequestMethod.GET)

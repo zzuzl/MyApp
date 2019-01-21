@@ -8,14 +8,16 @@
         insert into patent(
             title,
             subTitle,
-            content,
+            url,
+            authors,
             postTime,
             createTime,
             updateTime
         ) values(
             #{title},
             #{subTitle},
-            #{content},
+            #{url},
+            #{authorNames},
             #{postTime},
             now(),
             now()
@@ -23,7 +25,7 @@
     </insert>
 
     <update id="update" parameterType="cn.zlihj.domain.Patent">
-        update patent set title=#{title},subTitle=#{subTitle},postTime=#{postTime},content=#{content}, updateTime=now() where id=#{id}
+        update patent set title=#{title},subTitle=#{subTitle},postTime=#{postTime},url=#{url},authors=#{authorNames}, updateTime=now() where id=#{id}
     </update>
 
     <delete id="del">
@@ -31,9 +33,33 @@
     </delete>
 
     <select id="pageList" resultType="cn.zlihj.domain.Patent">
-        select * from patent
+        select id, title, subTitle, url, authors as authorNames, postTime, createTime, updateTime from patent
         order by postTime asc
         limit ${from},${size}
+    </select>
+
+    <select id="findById" resultType="cn.zlihj.domain.Patent">
+        select id, title, subTitle, url, authors as authorNames, postTime, createTime, updateTime from patent where id=#{id}
+    </select>
+
+    <delete id="delMapById">
+        delete from staff_patent_map where id=#{id}
+    </delete>
+
+    <select id="count" resultType="int">
+        select count(*) from patent
+    </select>
+
+    <delete id="delMapByPatentId">
+        delete from staff_patent_map where patentId=#{patentId}
+    </delete>
+
+    <insert id="insertMap">
+        insert into staff_patent_map(staffId, patentId) VALUES (#{staffId}, #{patentId})
+    </insert>
+
+    <select id="listMap" resultType="cn.zlihj.domain.StaffPatentVo">
+        SELECT * from staff_patent_map where patentId=#{patentId}
     </select>
 
 </mapper>
