@@ -55,4 +55,6 @@ public interface StaffDao {
                      @Param("avatar") String avatar);
 
     void del(@Param("id") Long id);
+
+    List<Staff> findNames(@Param("ids") List<Long> ids);
 }

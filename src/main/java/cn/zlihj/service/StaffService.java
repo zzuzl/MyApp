@@ -141,6 +141,10 @@ public class StaffService {
         Assert.isTrue(i == 1, "移动失败");
     }
 
+    public List<Staff> findNames(List<Long> ids) {
+        return staffDao.findNames(ids);
+    }
+
     public List<SearchVo> searchAll(String key) {
         return staffDao.searchAll(key);
     }

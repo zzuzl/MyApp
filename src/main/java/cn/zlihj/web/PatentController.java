@@ -86,6 +86,38 @@ public class PatentController {
         return result;
     }
 
+    @RequestMapping(value = "/findStaff", method = RequestMethod.GET)
+    @ResponseBody
+    public Result findStaff(@RequestParam("id") Integer id, @RequestParam("name") String name) {
+        Result result = null;
+        try {
+            Assert.notNull(id, "参数错误");
+            Assert.notNull(name, "参数错误");
+
+            List<StaffPatentVo> vos = patentService.listMap(id);
+            List<Long> ids = new ArrayList<>();
+            for (StaffPatentVo vo : vos) {
+                ids.add(vo.getStaffId());
+            }
+
+            List<Staff> staffList = staffService.findNames(ids);
+            for (Staff staff : staffList) {
+                if (staff.getName().equals(name)) {
+                    staffService.fillStaffInfo(staff);
+                    result = Result.successResult();
+                    result.setData(staff);
+                    return result;
+                }
+            }
+
+            result = Result.errorResult("未查询到该人员");
+        } catch (Exception e) {
+            logger.error("查询失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public Result save(@RequestBody Patent patent) {

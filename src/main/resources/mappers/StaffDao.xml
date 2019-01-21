@@ -186,4 +186,11 @@
     <delete id="del">
         delete from staff where id=#{id}
     </delete>
+
+    <select id="findNames" resultType="cn.zlihj.domain.Staff">
+        select <include refid="column"/> from staff where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
 </mapper>
