@@ -29,7 +29,7 @@
     <select id="listByStaff" resultType="cn.zlihj.domain.Resume">
         select * from resume
         where staffId=#{staffId}
-        order by createTime asc
+        order by id asc
         limit 5000
     </select>
 
