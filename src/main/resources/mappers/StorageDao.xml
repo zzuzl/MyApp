@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zlihj.dao.StorageDao">
+
+    <insert id="insert" parameterType="cn.zlihj.domain.Storage" keyProperty="id" useGeneratedKeys="true">
+        insert into storage(
+            title,
+            url,
+            storageType,
+            createTime,
+            updateTime
+        ) values(
+            #{title},
+            #{url},
+            #{storageType},
+            now(),
+            now()
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.zlihj.domain.Storage">
+        update storage set title=#{title}, url=#{url}, storageType=#{storageType}, updateTime=now() where id=#{id}
+    </update>
+
+    <delete id="del">
+        delete from storage where id=#{id}
+    </delete>
+
+    <select id="listByType" resultType="cn.zlihj.domain.Storage">
+        select * from storage
+        where storageType=#{storageType}
+        order by id asc
+        limit 5000
+    </select>
+
+</mapper>
