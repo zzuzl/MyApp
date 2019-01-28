@@ -292,6 +292,45 @@ public class ResourceController {
         return result;
     }
 
+    @RequestMapping(value = "/uploadStorage", method = RequestMethod.POST)
+    @ResponseBody
+    public Result uploadStorage(@RequestParam("file") MultipartFile file) {
+        Result result = null;
+        try {
+            logger.info(file.getOriginalFilename() + ",size:" + file.getSize());
+
+            Assert.isTrue(file.getSize() < 5120000, "文件超过5M");
+
+            String rootPath = "/tmp";
+            File dir = new File(rootPath + File.separator + "tmpStorage");
+            if (!dir.exists()) {
+                Assert.isTrue(dir.mkdirs(), "文件夹创建失败");
+            }
+            File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
+            file.transferTo(serverFile);
+
+            // 上传到COS
+            COSCredentials cred = new BasicCOSCredentials("AKIDIQNCnEdaYTGD7OSUIVXO6e4JQNchpMzs", "uhKwMbheR3BtZ4NZiieS7jAPVWM1qbDg");
+            ClientConfig clientConfig = new ClientConfig(new Region("ap-beijing"));
+            COSClient cosclient = new COSClient(cred, clientConfig);
+
+            String key = "storage/" + (System.currentTimeMillis() / 1000) + "-" + file.getOriginalFilename();
+            PutObjectRequest putObjectRequest = new PutObjectRequest("zlihj-zpk-1251746773", key, serverFile);
+            cosclient.putObject(putObjectRequest);
+            cosclient.shutdown();
+
+            serverFile.deleteOnExit();
+            String url = "https://zlihj-zpk-1251746773.cos.ap-beijing.myqcloud.com/" + key;
+            result = Result.successResult();
+            result.setMsg(url);
+        } catch (Exception e) {
+            logger.error("uploadFile error:", e);
+            result = Result.errorResult(e.getMessage());
+        }
+
+        return result;
+    }
+
     private boolean isPdf(String extension) {
         return "pdf".equalsIgnoreCase(extension.toLowerCase());
     }
