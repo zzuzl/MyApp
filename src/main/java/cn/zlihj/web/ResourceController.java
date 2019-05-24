@@ -449,8 +449,7 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/uploadSubject", method = RequestMethod.POST)
-    public Map<String, Object> uploadSubject(@RequestParam("file") MultipartFile file, Model model) {
-        Map<String, Object> map = new HashMap<>();
+    public Result uploadSubject(@RequestParam("file") MultipartFile file, Model model) {
         Result result = null;
         try {
             if (!file.isEmpty()) {
@@ -493,14 +492,13 @@ public class ResourceController {
                 logger.error("You failed to upload " +  file.getOriginalFilename() + " because the file was empty.");
             }
             result = Result.successResult();
-            result.setMsg("上传成功");
+            result.setMsg("");
         } catch (Exception e) {
             logger.error("上传失败：{}", e.getMessage(), e);
             result = Result.errorResult("错误：" + e.getMessage());
         }
 
-        convertToMap(result, map);
-        return map;
+        return result;
     }
 
     private List<Subject> parseExcel(File file) throws IOException {
