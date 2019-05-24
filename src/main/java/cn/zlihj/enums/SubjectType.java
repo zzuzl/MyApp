@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @Convertable
 public enum SubjectType {
 
-    RADIO(1, "单选"),
-    MULTI(2, "多选");
+    RADIO(1, "单选题"),
+    MULTI(2, "多选题");
 
     private Integer value;
     private String text;

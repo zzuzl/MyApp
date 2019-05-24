@@ -10,6 +10,7 @@ import cn.zlihj.enums.WorkType;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.ProjectService;
 import cn.zlihj.service.StaffService;
+import cn.zlihj.service.SubjectService;
 import cn.zlihj.util.ExcelUtil;
 import cn.zlihj.util.ParamUtil;
 import com.google.code.kaptcha.Constants;
@@ -75,6 +76,8 @@ public class ResourceController {
     private JavaMailSenderImpl javaMailSender;
     @Autowired
     private VelocityEngine velocityEngine;
+    @Autowired
+    private SubjectService subjectService;
 
     private Cache<String, String> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
@@ -466,12 +469,26 @@ public class ResourceController {
 
                 logger.info("You successfully uploaded file=" +  file.getOriginalFilename());
                 List<Subject> subjects = parseExcel(serverFile);
-                for (Subject subject : subjects) {
-                    System.out.println(subject);
-                    // todo
-                }
 
                 serverFile.deleteOnExit();
+                if (subjects.size() > 0) {
+                    // 上传到COS
+                    COSCredentials cred = new BasicCOSCredentials("AKIDIQNCnEdaYTGD7OSUIVXO6e4JQNchpMzs", "uhKwMbheR3BtZ4NZiieS7jAPVWM1qbDg");
+                    ClientConfig clientConfig = new ClientConfig(new Region("ap-beijing"));
+                    COSClient cosclient = new COSClient(cred, clientConfig);
+
+                    String key = "subject/" + (System.currentTimeMillis() / 1000) + "-" + file.getOriginalFilename();
+                    PutObjectRequest putObjectRequest = new PutObjectRequest("zlihj-zpk-1251746773", key, serverFile);
+                    cosclient.putObject(putObjectRequest);
+                    cosclient.shutdown();
+
+                    serverFile.deleteOnExit();
+                    // 更新URL
+                    String url = "https://zlihj-zpk-1251746773.cos.ap-beijing.myqcloud.com/" + key;
+                    Exam exam = subjects.get(0).getExam();
+                    exam.setUrl(url);
+                    subjectService.saveExam(exam, subjects);
+                }
             } else {
                 logger.error("You failed to upload " +  file.getOriginalFilename() + " because the file was empty.");
             }
@@ -490,13 +507,16 @@ public class ResourceController {
         List<String[]> list = ExcelUtil.readFromFile(file, 20, 1000);
 
         List<Subject> subjects = new ArrayList<>(list.size() - 1);
-        for (int j=0;j<subjects.size();j++) {
+        for (int j=0;j<list.size() - 1;j++) {
             subjects.add(new Subject());
         }
 
         String[] header = list.get(0);
         for (int i=0;i<header.length;i++) {
             String h = header[i];
+            if (h == null) {
+                continue;
+            }
             switch (h) {
                 case "题号":
                     for (int j=0;j<subjects.size();j++) {
@@ -584,6 +604,7 @@ public class ResourceController {
         }
 
         Exam exam = new Exam();
+        exam.setTitle("test");
         exam.setId(1);
 
         Set<Integer> set = new HashSet<>();

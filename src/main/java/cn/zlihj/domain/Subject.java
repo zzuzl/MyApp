@@ -4,6 +4,8 @@ import cn.zlihj.enums.SubjectType;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+
 public class Subject {
     private Long id;
     private Exam exam;
@@ -23,6 +25,8 @@ public class Subject {
     private String answer;
     private String analysis;
     private Integer score;
+    private Date createTime;
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -168,6 +172,22 @@ public class Subject {
         this.score = score;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public void check() {
         Assert.notNull(order, "题号不能为空");
         Assert.notNull(type, "类型不能为空");
@@ -180,9 +200,9 @@ public class Subject {
             if (StringUtils.isEmpty(options[i])) {
                 if (index == -1) {
                     index = i;
-                } else {
-                    throw new IllegalArgumentException("选项设置错误");
                 }
+            } else if (index != -1) {
+                throw new IllegalArgumentException("选项设置错误");
             }
         }
     }

@@ -125,7 +125,7 @@ public class ExcelUtil {
 		while (rowIterator.hasNext()) {
 			Row next = rowIterator.next();
 			Cell first = next.getCell(0);
-			if (first == null || !StringUtils.hasText(first.getStringCellValue())) {
+			if (first == null || !StringUtils.hasText(((XSSFCell) first).getRawValue())) {
 				break;
 			}
 

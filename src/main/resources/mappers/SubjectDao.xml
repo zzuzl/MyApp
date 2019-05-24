@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.zlihj.dao.SubjectDao">
+
+    <insert id="insertOrUpdate" parameterType="cn.zlihj.domain.Subject" keyProperty="id" useGeneratedKeys="true">
+        insert into subject(
+            id,
+            exam_id,
+            `order`,
+            type,
+            title,
+            option1,
+            option2,
+            option3,
+            option4,
+            option5,
+            option6,
+            option7,
+            option8,
+            option9,
+            option10,
+            answer,
+            analysis,
+            score,
+            createTime,
+            updateTime
+        ) values(
+            null,
+            #{exam.id},
+            #{order},
+            #{type},
+            #{title},
+            #{option1},
+            #{option2},
+            #{option3},
+            #{option4},
+            #{option5},
+            #{option6},
+            #{option7},
+            #{option8},
+            #{option9},
+            #{option10},
+            #{answer},
+            #{analysis},
+            #{score},
+            now(),
+            now()
+        ) on duplicate key update
+        `type`=VALUES(`type`),
+        title=VALUES(title),
+        option1=VALUES(option1),
+        option2=VALUES(option2),
+        option3=VALUES(option3),
+        option4=VALUES(option4),
+        option5=VALUES(option5),
+        option6=VALUES(option6),
+        option7=VALUES(option7),
+        option8=VALUES(option8),
+        option9=VALUES(option9),
+        option10=VALUES(option10),
+        answer=VALUES(answer),
+        analysis=VALUES(analysis),
+        score=VALUES(score),
+        updateTime=VALUES(updateTime)
+    </insert>
+
+    <update id="updateExam" parameterType="cn.zlihj.domain.Subject">
+        update exam set title=#{title}, updateTime=now(),url=#{url} where id=#{id}
+    </update>
+
+    <select id="list" resultType="cn.zlihj.domain.Subject">
+        select * from subject where exam_id=#{examId} order by `order` asc limit 2000
+    </select>
+
+    <delete id="deleteOthers">
+        delete from subject where exam_id=#{examId} and `order` not in
+        <foreach collection="orders" open="(" close=")" item="item" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultType="cn.zlihj.domain.Exam">
+        select * from exam where id=#{examId} limit 1
+    </select>
+</mapper>
