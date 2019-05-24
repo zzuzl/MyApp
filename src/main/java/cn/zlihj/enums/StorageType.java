@@ -6,8 +6,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 @Convertable
 public enum StorageType {
+    // 部门动态
     BM(1),
-    ZD(2);
+    // 制度文件
+    ZD(2),
+    // 制度-陈飞
+    SYSTEM(3),
+    // 资料-陈飞
+    DATA(4)
+    ;
 
     private Integer value;
 

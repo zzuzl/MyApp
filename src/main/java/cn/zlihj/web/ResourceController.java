@@ -1,12 +1,11 @@
 package cn.zlihj.web;
 
-import cn.zlihj.domain.Company;
-import cn.zlihj.domain.Project;
-import cn.zlihj.domain.Staff;
+import cn.zlihj.domain.*;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
 import cn.zlihj.enums.Gender;
 import cn.zlihj.enums.Source;
+import cn.zlihj.enums.SubjectType;
 import cn.zlihj.enums.WorkType;
 import cn.zlihj.service.CompanyService;
 import cn.zlihj.service.ProjectService;
@@ -444,6 +443,165 @@ public class ResourceController {
 
         convertToMap(result, map);
         return map;
+    }
+
+    @RequestMapping(value = "/uploadSubject", method = RequestMethod.POST)
+    public Map<String, Object> uploadSubject(@RequestParam("file") MultipartFile file, Model model) {
+        Map<String, Object> map = new HashMap<>();
+        Result result = null;
+        try {
+            if (!file.isEmpty()) {
+                if (!FilenameUtils.isExtension(file.getOriginalFilename(), "xlsx")
+                        && !FilenameUtils.isExtension(file.getOriginalFilename(), "xls")) {
+                    throw new RuntimeException("仅支持.xlsx和.xls文件");
+                }
+
+                String rootPath = "/tmp";
+                File dir = new File(rootPath + File.separator + "tmpFiles");
+                if (!dir.exists()) {
+                    Assert.isTrue(dir.mkdirs(), "文件夹创建失败");
+                }
+                File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
+                file.transferTo(serverFile);
+
+                logger.info("You successfully uploaded file=" +  file.getOriginalFilename());
+                List<Subject> subjects = parseExcel(serverFile);
+                for (Subject subject : subjects) {
+                    System.out.println(subject);
+                    // todo
+                }
+
+                serverFile.deleteOnExit();
+            } else {
+                logger.error("You failed to upload " +  file.getOriginalFilename() + " because the file was empty.");
+            }
+            result = Result.successResult();
+            result.setMsg("上传成功");
+        } catch (Exception e) {
+            logger.error("上传失败：{}", e.getMessage(), e);
+            result = Result.errorResult("错误：" + e.getMessage());
+        }
+
+        convertToMap(result, map);
+        return map;
+    }
+
+    private List<Subject> parseExcel(File file) throws IOException {
+        List<String[]> list = ExcelUtil.readFromFile(file, 20, 1000);
+
+        List<Subject> subjects = new ArrayList<>(list.size() - 1);
+        for (int j=0;j<subjects.size();j++) {
+            subjects.add(new Subject());
+        }
+
+        String[] header = list.get(0);
+        for (int i=0;i<header.length;i++) {
+            String h = header[i];
+            switch (h) {
+                case "题号":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOrder(Integer.parseInt(list.get(j+1)[i]));
+                    }
+                    break;
+                case "题型":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setType(SubjectType.ofText(list.get(j+1)[i]));
+                    }
+                    break;
+                case "题目":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setTitle(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项1":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption1(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项2":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption2(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项3":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption3(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项4":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption4(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项5":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption5(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项6":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption6(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项7":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption7(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项8":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption8(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项9":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption9(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项10":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption10(list.get(j+1)[i]);
+                    }
+                    break;
+                case "答案":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setAnswer(list.get(j+1)[i]);
+                    }
+                    break;
+                case "答案解析":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setAnalysis(list.get(j+1)[i]);
+                    }
+                    break;
+                case "分值":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setScore(Integer.parseInt(list.get(j+1)[i]));
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("未知列名");
+            }
+        }
+
+        Exam exam = new Exam();
+        exam.setId(1);
+
+        Set<Integer> set = new HashSet<>();
+        for (int j=0;j<subjects.size();j++) {
+            subjects.get(j).setExam(exam);
+
+            subjects.get(j).check();
+            if (set.contains(subjects.get(j).getOrder())) {
+                throw new IllegalArgumentException("题号重复");
+            } else {
+                set.add(subjects.get(j).getOrder());
+            }
+            if (subjects.get(j).getOrder() > subjects.size() || subjects.get(j).getOrder() < 1) {
+                throw new IllegalArgumentException("题号范围错误");
+            }
+        }
+
+        return subjects;
     }
 
     @RequestMapping("/index")

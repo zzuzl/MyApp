@@ -1,7 +1,11 @@
 package test;
 
+import cn.zlihj.domain.Exam;
 import cn.zlihj.domain.Staff;
+import cn.zlihj.domain.Subject;
+import cn.zlihj.enums.SubjectType;
 import cn.zlihj.enums.WorkType;
+import cn.zlihj.util.ExcelUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
@@ -41,7 +45,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Iterator;
+import java.util.*;
+import java.util.List;
 
 public class SimpleTest {
     private static File indexFile = new File("/Users/zhanglei53/index");
@@ -177,5 +182,125 @@ public class SimpleTest {
         System.out.println(putObjectResult.getMetadata().getRawMetadata());
 
         cosclient.shutdown();
+    }
+
+    @Test
+    public void readSubject() throws IOException {
+        String file = "";
+        List<String[]> list = ExcelUtil.readFromFile(new File(file), 20, 10000);
+
+        List<Subject> subjects = new ArrayList<>(list.size() - 1);
+        for (int j=0;j<subjects.size();j++) {
+            subjects.add(new Subject());
+        }
+
+        String[] header = list.get(0);
+        for (int i=0;i<header.length;i++) {
+            String h = header[i];
+            switch (h) {
+                case "题号":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOrder(Integer.parseInt(list.get(j+1)[i]));
+                    }
+                    break;
+                case "题型":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setType(SubjectType.ofText(list.get(j+1)[i]));
+                    }
+                    break;
+                case "题目":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setTitle(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项1":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption1(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项2":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption2(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项3":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption3(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项4":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption4(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项5":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption5(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项6":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption6(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项7":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption7(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项8":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption8(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项9":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption9(list.get(j+1)[i]);
+                    }
+                    break;
+                case "选项10":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setOption10(list.get(j+1)[i]);
+                    }
+                    break;
+                case "答案":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setAnswer(list.get(j+1)[i]);
+                    }
+                    break;
+                case "答案解析":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setAnalysis(list.get(j+1)[i]);
+                    }
+                    break;
+                case "分值":
+                    for (int j=0;j<subjects.size();j++) {
+                        subjects.get(j).setScore(Integer.parseInt(list.get(j+1)[i]));
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("未知列名");
+            }
+        }
+
+        Exam exam = new Exam();
+        exam.setId(1);
+
+        Set<Integer> set = new HashSet<>();
+        for (int j=0;j<subjects.size();j++) {
+            subjects.get(j).setExam(exam);
+
+            subjects.get(j).check();
+            if (set.contains(subjects.get(j).getOrder())) {
+                throw new IllegalArgumentException("题号重复");
+            } else {
+                set.add(subjects.get(j).getOrder());
+            }
+            if (subjects.get(j).getOrder() > subjects.size() || subjects.get(j).getOrder() < 1) {
+                throw new IllegalArgumentException("题号范围错误");
+            }
+        }
+
+        // todo 存库
     }
 }

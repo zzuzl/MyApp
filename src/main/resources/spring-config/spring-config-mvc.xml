@@ -90,6 +90,7 @@
 			<mvc:exclude-mapping path="/staff/login"/>
 			<mvc:exclude-mapping path="/checkVersion"/>
             <mvc:exclude-mapping path="/resource/**"/>
+			<mvc:exclude-mapping path="/storage/**"/>
 			<ref bean="userInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
