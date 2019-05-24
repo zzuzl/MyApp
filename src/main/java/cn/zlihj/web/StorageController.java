@@ -73,4 +73,18 @@ public class StorageController {
         }
         return result;
     }
+
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @ResponseBody
+    public Result del(Integer id) {
+        Result result = null;
+        try {
+            storageService.del(id);
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("删除存储条目失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
+        }
+        return result;
+    }
 }
