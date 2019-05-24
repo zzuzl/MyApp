@@ -449,6 +449,7 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/uploadSubject", method = RequestMethod.POST)
+    @ResponseBody
     public Result uploadSubject(@RequestParam("file") MultipartFile file, Model model) {
         Result result = null;
         try {
