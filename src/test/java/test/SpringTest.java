@@ -1,16 +1,10 @@
 package test;
 
 import cn.zlihj.dao.PermissionDao;
-import cn.zlihj.domain.Company;
-import cn.zlihj.domain.Project;
-import cn.zlihj.domain.Resume;
-import cn.zlihj.domain.Staff;
+import cn.zlihj.domain.*;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.enums.WorkType;
-import cn.zlihj.service.CompanyService;
-import cn.zlihj.service.ProjectService;
-import cn.zlihj.service.ResumeService;
-import cn.zlihj.service.StaffService;
+import cn.zlihj.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +30,14 @@ public class SpringTest {
     private PermissionDao permissionDao;
     @Autowired
     private ResumeService resumeService;
+    @Autowired
+    private SubjectService subjectService;
+
+    @Test
+    public void testSubject() {
+        List<Subject> subjects = subjectService.selectSubjects(1, 10);
+        System.out.println(subjects);
+    }
 
     @Test
     public void testInsert() {

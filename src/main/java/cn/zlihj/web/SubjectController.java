@@ -28,7 +28,7 @@ public class SubjectController {
         ListResult<Subject> result = null;
 
         try {
-            List<Subject> subjects = subjectService.list(examId);
+            List<Subject> subjects = subjectService.selectSubjects(examId, 10);
             result = ListResult.successList(subjects);
         } catch (Exception e) {
             logger.error("listByExam:{}", examId, e);

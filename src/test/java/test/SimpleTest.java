@@ -58,6 +58,15 @@ public class SimpleTest {
     }
 
     @Test
+    public void testRandom() {
+        Random random = new Random(System.currentTimeMillis());
+        int count = 15;
+        for (int i=0;i<10;i++) {
+            System.out.println(random.nextInt(count--));
+        }
+    }
+
+    @Test
     public void testJson() throws JsonProcessingException {
         Staff staff = new Staff();
         staff.setType(WorkType.AZ);

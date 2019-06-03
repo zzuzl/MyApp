@@ -16,5 +16,9 @@ public interface SubjectDao {
     int deleteOthers(@Param("examId") Integer examId,
                      @Param("orders") List<Integer> orders);
 
+    List<Integer> selectSubjectIds(@Param("examId") Integer examId);
+
+    List<Subject> selectSubjectByIds(@Param("ids") List<Integer> ids);
+
     Exam getById(@Param("examId") Integer examId);
 }

@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class SubjectService {
@@ -37,6 +38,27 @@ public class SubjectService {
 
     public List<Subject> list(Integer examId) {
         return subjectDao.list(examId);
+    }
+
+    public List<Subject> selectSubjects(Integer examId, int max) {
+        List<Integer> ids = subjectDao.selectSubjectIds(examId);
+        max = Math.min(ids.size(), max);
+
+        if (max <= 0) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> resultIds = new ArrayList<>(max);
+
+        Random random = new Random(System.currentTimeMillis());
+        for (int i=0;i<max;i++) {
+            int index = random.nextInt(ids.size());
+            Integer id = ids.get(index);
+            resultIds.add(id);
+            ids.remove(id);
+        }
+
+        return subjectDao.selectSubjectByIds(resultIds);
     }
 
     public Exam getExamById(Integer examId) {

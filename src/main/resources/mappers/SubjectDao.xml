@@ -81,6 +81,18 @@
         </foreach>
     </delete>
 
+    <select id="selectSubjectIds" resultType="java.lang.Integer">
+        select id from subject where exam_id=#{examId} limit 2000
+    </select>
+
+    <select id="selectSubjectByIds" resultType="cn.zlihj.domain.Subject">
+        select * from subject where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+        order by `order` asc
+    </select>
+
     <select id="getById" resultType="cn.zlihj.domain.Exam">
         select * from exam where id=#{examId} limit 1
     </select>
