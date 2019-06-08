@@ -5,6 +5,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Subject {
     private Long id;
@@ -203,6 +205,15 @@ public class Subject {
                 }
             } else if (index != -1) {
                 throw new IllegalArgumentException("选项设置错误");
+            }
+        }
+
+        Set<String> set = new HashSet<>();
+        for(int i=0;i<index;i++) {
+            if (set.contains(options[i])) {
+                throw new IllegalArgumentException("答案重复:" + options[i]);
+            } else {
+                set.add(options[i]);
             }
         }
     }
