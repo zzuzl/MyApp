@@ -519,12 +519,20 @@ public class ResourceController {
             switch (h) {
                 case "题号":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOrder(Integer.parseInt(list.get(j+1)[i]));
+                        try {
+                            subjects.get(j).setOrder(Integer.parseInt(list.get(j+1)[i]));
+                        } catch (Exception e) {
+                            throw new RuntimeException("题号错误,行号：" + (j+2));
+                        }
                     }
                     break;
                 case "题型":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setType(SubjectType.ofText(list.get(j+1)[i]));
+                        try {
+                            subjects.get(j).setType(SubjectType.ofText(list.get(j+1)[i]));
+                        } catch (Exception e) {
+                            throw new RuntimeException("题型错误,行号：" + (j+2));
+                        }
                     }
                     break;
                 case "题目":
@@ -594,7 +602,11 @@ public class ResourceController {
                     break;
                 case "分值":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setScore(parseOrDefault(list.get(j+1)[i], 10));
+                        try {
+                            subjects.get(j).setScore(parseOrDefault(list.get(j+1)[i], 10));
+                        } catch (Exception e) {
+                            throw new RuntimeException("题型错误,行号：" + (j+2));
+                        }
                     }
                     break;
                 default:
@@ -610,9 +622,14 @@ public class ResourceController {
         for (int j=0;j<subjects.size();j++) {
             subjects.get(j).setExam(exam);
 
-            subjects.get(j).check();
+            try {
+                subjects.get(j).check();
+            } catch (Exception e) {
+                throw new IllegalArgumentException("行号：" + (j+2) + ",出现错误:" + e.getMessage());
+            }
+
             if (set.contains(subjects.get(j).getOrder())) {
-                throw new IllegalArgumentException("题号重复");
+                throw new IllegalArgumentException("题号重复,行号：" + (j+2));
             } else {
                 set.add(subjects.get(j).getOrder());
             }
