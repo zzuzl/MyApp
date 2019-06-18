@@ -537,67 +537,67 @@ public class ResourceController {
                     break;
                 case "题目":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setTitle(list.get(j+1)[i]);
+                        subjects.get(j).setTitle(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项1":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption1(list.get(j+1)[i]);
+                        subjects.get(j).setOption1(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项2":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption2(list.get(j+1)[i]);
+                        subjects.get(j).setOption2(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项3":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption3(list.get(j+1)[i]);
+                        subjects.get(j).setOption3(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项4":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption4(list.get(j+1)[i]);
+                        subjects.get(j).setOption4(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项5":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption5(list.get(j+1)[i]);
+                        subjects.get(j).setOption5(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项6":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption6(list.get(j+1)[i]);
+                        subjects.get(j).setOption6(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项7":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption7(list.get(j+1)[i]);
+                        subjects.get(j).setOption7(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项8":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption8(list.get(j+1)[i]);
+                        subjects.get(j).setOption8(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项9":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption9(list.get(j+1)[i]);
+                        subjects.get(j).setOption9(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "选项10":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setOption10(list.get(j+1)[i]);
+                        subjects.get(j).setOption10(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "答案":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setAnswer(list.get(j+1)[i]);
+                        subjects.get(j).setAnswer(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "答案解析":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setAnalysis(list.get(j+1)[i]);
+                        subjects.get(j).setAnalysis(reslove(list.get(j+1)[i]));
                     }
                     break;
                 case "分值":
@@ -652,6 +652,13 @@ public class ResourceController {
             result = defaultVal;
         }
         return result;
+    }
+
+    private String reslove(String text) {
+        if (text == null || !StringUtils.hasText(text)) {
+            return null;
+        }
+        return text.trim();
     }
 
     @RequestMapping("/index")
