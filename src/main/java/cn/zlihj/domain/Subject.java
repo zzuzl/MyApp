@@ -199,7 +199,7 @@ public class Subject {
         String[] options = {option1, option2, option3, option4, option5, option6, option7, option8, option9, option10};
         int index = -1;
         for (int i=0;i<options.length;i++) {
-            if (StringUtils.isEmpty(options[i])) {
+            if (!StringUtils.hasText(options[i])) {
                 if (index == -1) {
                     index = i;
                 }
