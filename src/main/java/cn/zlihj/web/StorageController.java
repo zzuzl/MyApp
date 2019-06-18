@@ -11,6 +11,7 @@ import cn.zlihj.util.ParamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +68,9 @@ public class StorageController {
             ParamUtil.checkBean(storage);
             storageService.save(storage);
             result = Result.successResult();
+        } catch (DuplicateKeyException ex) {
+            logger.error("保存存储条目重复：{}", ex.getMessage(), ex);
+            result = Result.errorResult("文件重复");
         } catch (Exception e) {
             logger.error("保存存储条目失败：{}", e.getMessage(), e);
             result = Result.errorResult(e.getMessage());
