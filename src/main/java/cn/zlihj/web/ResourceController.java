@@ -594,7 +594,7 @@ public class ResourceController {
                     break;
                 case "分值":
                     for (int j=0;j<subjects.size();j++) {
-                        subjects.get(j).setScore(Integer.parseInt(list.get(j+1)[i]));
+                        subjects.get(j).setScore(parseOrDefault(list.get(j+1)[i], 10));
                     }
                     break;
                 default:
@@ -622,6 +622,19 @@ public class ResourceController {
         }
 
         return subjects;
+    }
+
+    private Integer parseOrDefault(String text, int defaultVal) {
+        Integer result = null;
+        try {
+            result = Integer.parseInt(text);
+        } catch (Exception e) {
+
+        }
+        if (result == null) {
+            result = defaultVal;
+        }
+        return result;
     }
 
     @RequestMapping("/index")
