@@ -228,7 +228,7 @@ public class StaffController {
 
             logger.info(file.getOriginalFilename() + ",size:" + file.getSize());
 
-            Assert.isTrue(file.getSize() < 5120000, "图片超过5M");
+            Assert.isTrue(file.getSize() < 10240000, "图片超过10M");
 
             String rootPath = "/tmp";
             File dir = new File(rootPath + File.separator + "tmpAvatars");
