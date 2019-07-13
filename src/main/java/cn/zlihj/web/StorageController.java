@@ -4,6 +4,7 @@ import cn.zlihj.domain.Exam;
 import cn.zlihj.domain.Storage;
 import cn.zlihj.dto.ListResult;
 import cn.zlihj.dto.Result;
+import cn.zlihj.dto.StorageIndex;
 import cn.zlihj.enums.StorageType;
 import cn.zlihj.service.StorageService;
 import cn.zlihj.service.SubjectService;
@@ -40,6 +41,24 @@ public class StorageController {
         } catch (Exception e) {
             logger.error("查询存储条目失败：{}", e.getMessage(), e);
             result = ListResult.errorList(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/saveOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveOrder(@RequestBody List<StorageIndex> list) {
+        Result result = null;
+        try {
+            for (StorageIndex storageIndex : list) {
+                if (!storageIndex.getIndex().equals(storageIndex.getOldIndex())) {
+                    storageService.saveIndex(storageIndex);
+                }
+            }
+            result = Result.successResult();
+        } catch (Exception e) {
+            logger.error("调整顺序失败：{}", e.getMessage(), e);
+            result = Result.errorResult(e.getMessage());
         }
         return result;
     }

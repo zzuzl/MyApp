@@ -35,4 +35,8 @@
         limit 5000
     </select>
 
+    <update id="saveIndex">
+        update storage set itemOrder=#{index},updateTime=now() where id=#{id} and itemOrder=#{oldIndex}
+    </update>
+
 </mapper>

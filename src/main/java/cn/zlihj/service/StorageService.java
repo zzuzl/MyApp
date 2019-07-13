@@ -2,6 +2,7 @@ package cn.zlihj.service;
 
 import cn.zlihj.dao.StorageDao;
 import cn.zlihj.domain.Storage;
+import cn.zlihj.dto.StorageIndex;
 import cn.zlihj.enums.StorageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,13 @@ public class StorageService {
             add(storage);
         } else {
             update(storage);
+        }
+    }
+
+    public void saveIndex(StorageIndex storageIndex) {
+        int row = storageDao.saveIndex(storageIndex);
+        if (row != 1) {
+            throw new RuntimeException("顺序更新失败:" + storageIndex.getId());
         }
     }
 }

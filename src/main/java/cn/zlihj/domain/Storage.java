@@ -2,6 +2,8 @@ package cn.zlihj.domain;
 
 import cn.zlihj.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -14,6 +16,9 @@ public class Storage {
     private String url;
     @NotNull
     private StorageType storageType;
+    @NotNull
+    @Min(0)
+    private Integer itemOrder;
 
     private Date createTime;
     private Date updateTime;
@@ -48,6 +53,14 @@ public class Storage {
 
     public void setStorageType(StorageType storageType) {
         this.storageType = storageType;
+    }
+
+    public Integer getItemOrder() {
+        return itemOrder;
+    }
+
+    public void setItemOrder(Integer itemOrder) {
+        this.itemOrder = itemOrder;
     }
 
     public Date getCreateTime() {
