@@ -603,9 +603,10 @@ public class ResourceController {
                 case "分值":
                     for (int j=0;j<subjects.size();j++) {
                         try {
-                            subjects.get(j).setScore(parseOrDefault(list.get(j+1)[i], 10));
+                            subjects.get(j).setScore(10);
+                            // subjects.get(j).setScore(parseOrDefault(list.get(j+1)[i], 10));
                         } catch (Exception e) {
-                            throw new RuntimeException("题型错误,行号：" + (j+2));
+                            throw new RuntimeException("分数错误,行号：" + (j+2));
                         }
                     }
                     break;
