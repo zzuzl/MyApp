@@ -262,7 +262,7 @@ public class ResourceController {
 
             logger.info(file.getOriginalFilename() + ",size:" + file.getSize());
 
-            Assert.isTrue(file.getSize() < 5120000, "文件超过5M");
+            Assert.isTrue(file.getSize() < 10240000, "文件超过10M");
 
             String rootPath = "/tmp";
             File dir = new File(rootPath + File.separator + "tmpPatent");
@@ -301,7 +301,7 @@ public class ResourceController {
         try {
             logger.info(file.getOriginalFilename() + ",size:" + file.getSize());
 
-            Assert.isTrue(file.getSize() < 5120000, "文件超过5M");
+            Assert.isTrue(file.getSize() < 10240000, "文件超过10M");
 
             String rootPath = "/tmp";
             File dir = new File(rootPath + File.separator + "tmpStorage");
