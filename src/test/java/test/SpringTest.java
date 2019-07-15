@@ -1,8 +1,10 @@
 package test;
 
 import cn.zlihj.dao.PermissionDao;
+import cn.zlihj.dao.StorageDao;
 import cn.zlihj.domain.*;
 import cn.zlihj.dto.ListResult;
+import cn.zlihj.enums.StorageType;
 import cn.zlihj.enums.WorkType;
 import cn.zlihj.service.*;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,6 +35,8 @@ public class SpringTest {
     private ResumeService resumeService;
     @Autowired
     private SubjectService subjectService;
+    @Autowired
+    private StorageDao storageDao;
 
     @Test
     public void testSubject() {
@@ -44,6 +49,12 @@ public class SpringTest {
         Company company = new Company();
         company.setName("test1");
         companyService.insert(company);
+    }
+
+    @Test
+    public void testMaxOrder() {
+        Integer max = storageDao.getMaxOrder(Arrays.asList(StorageType.SYSTEM.value(), StorageType.DATA.value()));
+        System.out.println(max);
     }
 
     @Test

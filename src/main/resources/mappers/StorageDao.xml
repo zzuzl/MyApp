@@ -39,4 +39,11 @@
         update storage set itemOrder=#{index},updateTime=now() where id=#{id} and itemOrder=#{oldIndex}
     </update>
 
+    <select id="getMaxOrder" resultType="java.lang.Integer">
+        select max(itemOrder) as maxOrder from storage where storageType in
+        <foreach collection="types" item="type" open="(" close=")" separator=",">
+            #{type}
+        </foreach>
+    </select>
+
 </mapper>

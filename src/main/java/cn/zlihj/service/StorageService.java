@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class StorageService {
+    private final List<Integer> TYPES = Arrays.asList(StorageType.SYSTEM.value(), StorageType.DATA.value());
 
     @Autowired
     private StorageDao storageDao;
@@ -34,6 +36,10 @@ public class StorageService {
 
     public void save(Storage storage) {
         if (storage.getId() == null) {
+            if (storage.getStorageType() == StorageType.SYSTEM || storage.getStorageType() == StorageType.DATA) {
+                int maxOrder = storageDao.getMaxOrder(TYPES);
+                storage.setItemOrder(maxOrder + 1);
+            }
             add(storage);
         } else {
             update(storage);

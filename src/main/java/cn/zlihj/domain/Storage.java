@@ -16,8 +16,6 @@ public class Storage {
     private String url;
     @NotNull
     private StorageType storageType;
-    @NotNull
-    @Min(0)
     private Integer itemOrder;
 
     private Date createTime;
