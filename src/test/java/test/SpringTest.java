@@ -37,6 +37,8 @@ public class SpringTest {
     private SubjectService subjectService;
     @Autowired
     private StorageDao storageDao;
+    @Autowired
+    private StorageService storageService;
 
     @Test
     public void testSubject() {
@@ -53,8 +55,11 @@ public class SpringTest {
 
     @Test
     public void testMaxOrder() {
-        Integer max = storageDao.getMaxOrder(Arrays.asList(StorageType.SYSTEM.value(), StorageType.DATA.value()));
-        System.out.println(max);
+        Storage storage = new Storage();
+        storage.setTitle("ddd");
+        storage.setStorageType(StorageType.SYSTEM);
+        storage.setUrl("");
+        storageService.save(storage);
     }
 
     @Test

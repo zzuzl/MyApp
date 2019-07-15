@@ -9,12 +9,14 @@
             title,
             url,
             storageType,
+            itemOrder,
             createTime,
             updateTime
         ) values(
             #{title},
             #{url},
             #{storageType},
+            #{itemOrder},
             now(),
             now()
         )
