@@ -6,6 +6,7 @@ import cn.zlihj.domain.Subject;
 import cn.zlihj.enums.SubjectType;
 import cn.zlihj.enums.WorkType;
 import cn.zlihj.util.ExcelUtil;
+import cn.zlihj.util.ParamUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
@@ -83,6 +84,11 @@ public class SimpleTest {
     @Test
     public void testSearch() throws Exception {
         search("z");
+    }
+
+    @Test
+    public void testMd5() {
+        System.out.println(ParamUtil.md5("123456789"));
     }
 
     private void createIndex(String[] arr) throws Exception {

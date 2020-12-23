@@ -35,6 +35,9 @@ public class StorageService {
     }
 
     public void save(Storage storage) {
+        if (storage.getItemOrder() == null) {
+            storage.setItemOrder(0);
+        }
         if (storage.getId() == null) {
             if (storage.getStorageType() == StorageType.SYSTEM || storage.getStorageType() == StorageType.DATA) {
                 int maxOrder = storageDao.getMaxOrder(TYPES);
