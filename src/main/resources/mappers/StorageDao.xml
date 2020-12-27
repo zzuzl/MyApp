@@ -33,7 +33,7 @@
     <select id="listByType" resultType="cn.zlihj.domain.Storage">
         select * from storage
         where storageType=#{storageType}
-        order by id asc
+        order by itemOrder asc
         limit 5000
     </select>
 
